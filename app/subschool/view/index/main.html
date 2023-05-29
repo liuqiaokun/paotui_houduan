@@ -1,0 +1,350 @@
+{extend name='common/_container2'}
+{block name="content"}
+<style>
+	.gray-bg {
+		background-color: #f3f3f4;
+	}
+	.ibox-content {
+		background-color: #ffffff;
+		color: inherit;
+		padding: 15px 20px 20px 20px;
+		border-color: #e7eaec;
+		-webkit-border-image: none;
+		-o-border-image: none;
+		border-image: none;
+		border-style: solid solid none;
+		border-width: 1px 0px;
+	}
+
+	.portal-block-container {
+		font-size: 14px;
+		margin-bottom: 10px;
+		letter-spacing: 1px;
+	}
+
+	.portal-block-container .portal-block-item {
+		color: #fff;
+		padding: 15px 25px;
+		position: relative;
+		line-height: 3em;
+		border-radius: 5px;
+		box-shadow: 0 2px 3px 0 rgb(0 0 0 / 20%);
+	}
+
+	.textnew {
+		font-size: 46px;
+		line-height: 46px;
+	}
+
+	.yunying {
+		font-size: 18px;
+		line-height: 80px;
+		font-weight: bold;
+		height: 30px;
+		display: flex;
+		/*justify-content: center;*/
+		align-items: center;
+		/*border-bottom: 1px solid #dddddd;*/
+		/*opacity:0.4;*/
+	}
+
+	.yunshou {
+		/*background-color: #0C0C0C;*/
+		width: 100%;
+		height: 100%;
+	}
+
+	.shou {
+		background-color:  #FFFFFF;
+		width: 100%;
+		height: 47%;
+		margin-top: 2%;
+		padding: 15px;
+		border-radius: 5px;
+		/*border: 1px solid #dddddd;*/
+	}
+
+	.ru {
+		display: flex;
+		height: 30px;
+		align-items: center;
+		/*margin-left: 30px;*/
+	}
+
+	.yunimg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.conts {
+		padding: 15px;
+		/*background-color: #0C0C0C;*/
+		height: 45%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.conone {
+		width: 30%;
+		height: 100%;
+		/*background-color: #0C0C0C;*/
+	}
+
+	.contitle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 50%;
+		font-size: 22px;
+		line-height: 80px;
+		font-weight: 700;
+		font-family: DIN;
+	}
+
+	.ranking {
+		/*border-bottom: 1px solid #dddddd;*/
+		width: 100%;
+		height: 47px;
+		display: flex;
+
+
+	}
+
+	.column {
+		width: 25%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.dates{
+		width: 7%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+</style>
+<div class="container-fluid" style="padding: 0 !important;">
+	<div class="row" style="display: none">
+		<div class="col-sm-12">
+			<div class="alert alert-success alert-dismissable">
+				<button aria-hidden="true" data-dismiss="alert" class="close"
+						type="button">×
+				</button>
+				{:session('subschool.username')}，当前学校为{$school.s_name}，欢迎使用{:config('xhadmin.school_site_title')}
+
+			</div>
+		</div>
+	</div>
+
+	<div class="think-box-shadow portal-block-container notselect">
+		<div class="layui-row layui-col-space15">
+			<!--<div class="layui-col-sm6 layui-col-md3">-->
+				<!--<div class="portal-block-item nowrap" style="background:linear-gradient(-125deg,#57bdbf,#2f9de2)">-->
+					<!--<div>总用户</div>-->
+					<!--<div class="textnew">1</div>-->
+					<!--<div>今日新增 + 1</div>-->
+				<!--</div>&lt;!&ndash;<i class="portal-block-icon layui-icon layui-icon-app"></i>&ndash;&gt;</div>-->
+			<div class="layui-col-sm6 layui-col-md3" style="width: 33%;">
+				<div class="portal-block-item nowrap" style="background:linear-gradient(-125deg,#ff7d7d,#fb2c95)">
+					<div>总用户</div>
+					<div class="textnew">{$data.userTotal}</div>
+					<div>今日新增 + {$data.todayuser}</div>
+				</div><!--<i class="portal-block-icon layui-icon layui-icon-user"></i>--></div>
+			<div class="layui-col-sm6 layui-col-md3" style="width: 33%;">
+				<div class="portal-block-item nowrap" style="background:linear-gradient(-113deg,#c543d8,#925cc3)">
+					<div>总骑手</div>
+					<div class="textnew">{$data.run_status}</div>
+					<div>今日新增 + {$data.todayrun_status}</div>
+				</div><!--<i class="portal-block-icon layui-icon layui-icon-form"></i>--></div>
+			<div class="layui-col-sm6 layui-col-md3" style="width: 33%;">
+				<div class="portal-block-item nowrap" style="background:linear-gradient(-141deg,#ecca1b,#f39526)">
+					<div>总店铺</div>
+					<div class="textnew">{$data.business}</div>
+					<div>今日新增 + {$data.todaybusiness}</div>
+				</div><!--<i class="portal-block-icon layui-icon layui-icon-rmb"></i>--></div>
+		</div>
+	</div>
+	<div class="layui-row layui-col-space15 margin-top-10">
+
+		<div class="layui-col-xs12 layui-col-md6" style="padding: 15px;">
+			<div class="think-box-shadow">
+				<div id="main2" style="width:100%;height:550px">
+					<div class="yunying">运营概况</div>
+					<div class="yunshou">
+						<div class="shou">
+							<div class="ru">
+								<img src="https://<?php echo $_SERVER['HTTP_HOST'] ?>/wximages/pay.png" class="yunimg">&nbsp;&nbsp; 运营收入
+							</div>
+							<div class="conts">
+								<div class="conone">
+									<div class="contitle">{$data.orderpay.pay}</div>
+									<div class="contitle" style=" font-weight: 500;font-size: 18px;">总收益额</div>
+								</div>
+							</div>
+							<div class="conts">
+								<div class="conone">
+									<div class="contitle">{$data.orderpay.todaypay}</div>
+									<div class="contitle" style=" font-weight: 500;font-size: 18px;">今日收益</div>
+								</div>
+								<div class="conone">
+									<div class="contitle">{$data.orderpay.weekpay}</div>
+									<div class="contitle" style=" font-weight: 500;font-size: 18px;">本周收益</div>
+								</div>
+								<div class="conone">
+									<div class="contitle">{$data.orderpay.monthpay}</div>
+									<div class="contitle" style=" font-weight: 500;font-size: 18px;">本月收益</div>
+								</div>
+							</div>
+						</div>
+						<div class="shou">
+							<div class="ru">
+								<img src="https://<?php echo $_SERVER['HTTP_HOST'] ?>/wximages/order.png" class="yunimg">&nbsp;&nbsp; 订单统计
+							</div>
+							<div class="conts">
+								<div class="conone">
+									<div class="contitle">{$data.order}</div>
+									<div class="contitle" style=" font-weight: 500;font-size: 18px;">总订单量</div>
+								</div>
+							</div>
+							<div class="conts">
+								<div class="conone">
+									<div class="contitle">{$data.todayorder}</div>
+									<div class="contitle" style=" font-weight: 500;font-size: 18px;">今日订单</div>
+								</div>
+								<div class="conone">
+									<div class="contitle">{$data.weekorder}</div>
+									<div class="contitle" style=" font-weight: 500;font-size: 18px;">本周订单</div>
+								</div>
+								<div class="conone">
+									<div class="contitle">{$data.monthorder}</div>
+									<div class="contitle" style=" font-weight: 500;font-size: 18px;">本月订单</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-xs12 layui-col-md6" style="padding: 15px;">
+			<div class="think-box-shadow">
+				<div id="main4" style="width:100%;height:483px;">
+					<div class="yunying">赏金榜 Top10</div>
+					<div class="ru" style="height: 0%;justify-content: right">
+						<!--学校：<select class="form-control" style="width: 90%">&nbsp;&nbsp;-->
+						<!--<option class="layui-menu-body-title">请选择</option>-->
+						<!--<option class="layui-menu-body-title">财经学院</option>-->
+						<!--<option class="layui-menu-body-title">交通大学</option>-->
+					<!--</select>-->
+						<!--<div class="dates" >今日</div>-->
+						<!--<div class="dates" >本周</div>-->
+						<!--<div class="dates" >本月</div>-->
+						<!--<ul class="layui-tab-title" id="typs">-->
+							<!--<li onclick="schoolss(1)" >今日</li>-->
+							<!--<li onclick="schoolss(2)" >本周</li>-->
+							<!--<li onclick="schoolss(3)" >本月</li>-->
+
+						<!--</ul>-->
+					</div>
+					<!--<div >-->
+					<div class="ranking" style="margin-top:2%;background-color:#FFFFFF;border-top-left-radius:5px;border-top-right-radius:5px;">
+						<div class="column">
+							排名
+						</div>
+						<div class="column">
+							骑手昵称
+						</div>
+						<div class="column">
+							性别
+						</div>
+						<div class="column">
+							赚取赏金
+						</div>
+					</div>
+					<!--</div>-->
+					<div id="places" style="border-bottom-right-radius:5px;border-bottom-left-radius:5px;width: 100%;height: 100%;background-color:#FFFFFF;padding: 0 15px;">
+						{volist name="data.log" id="vo" }
+						<div class="ranking">
+							<div class="column">
+								{$vo.number}
+							</div>
+							<div class="column">
+								{$vo.nickname}
+							</div>
+							<div class="column">
+								{if $vo['t_sex'] == 1}
+								男
+								{elseif  $vo['t_sex'] == 2}
+								女
+								{else /}
+								未知
+								{/if}
+							</div>
+							<div class="column">
+								{$vo.price}
+							</div>
+						</div>
+						{/volist}
+
+					</div>
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<script type="text/javascript" >
+    function schoolss(e) {
+        // var schoolid = document.getElementById('schoolid').value;
+        var typs = document.getElementById('typs');
+        var places = document.getElementById('places');
+        $.ajax({
+            url: '{:url("subschool/index/schooleid")}',
+            type: "GET",
+            data: {"type":e},
+            dataType: "json",
+            //success 会在成功接收到返回数据后触发
+            success:function (re) {
+                var data = re;
+                var datas = data
+                var html = "";
+                for (var i = 0; i < datas.length; i++) {
+                    var resutl = datas[i];
+                    html += " <div class='ranking'>";
+                    html += " <div class='column'>"+ resutl.number +"</div>";
+                    html += " <div class='column'>"+ resutl.nickname +"</div>";
+                    html += " <div class='column'>"+ resutl.t_sex +"</div>";
+                    html += " <div class='column'>"+ resutl.price +"</div>";
+                    html += " </div>";
+                }
+                var day = '';
+                if(e == 1){
+                    day += "<li class='layui-this' onclick='schoolss(1)' >今日</li>";
+                    day += "<li onclick='schoolss(2)' >本周</li>";
+                    day +=  "<li onclick='schoolss(3)' >本月</li>";
+				}
+                if(e == 2){
+                    day += "<li onclick='schoolss(1)' >今日</li>";
+                    day += "<li class='layui-this' onclick='schoolss(2)' >本周</li>";
+                    day +=  "<li onclick='schoolss(3)' >本月</li>";
+                }
+                if(e == 3){
+                    day += "<li onclick='schoolss(1)' >今日</li>";
+                    day += "<li onclick='schoolss(2)' >本周</li>";
+                    day +=  "<li class='layui-this' onclick='schoolss(3)' >本月</li>";
+                }
+                typs.innerHTML = day;
+                places.innerHTML = html;
+            }
+        });
+        // console.log(schoolid, '---');
+    }
+</script>
+
+{/block}

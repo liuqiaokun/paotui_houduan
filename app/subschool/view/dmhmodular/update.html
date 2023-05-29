@@ -1,0 +1,129 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='id' id='id' value="{$info.id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="title" value="{$info.title}" name="title" class="form-control" placeholder="请输入名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">排序：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="sort" value="{$info.sort}" name="sort" class="form-control" placeholder="请输入排序">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">缩略图：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="image" value="{$info.image}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="image" class="form-control" placeholder="请输入缩略图">
+							<span class="help-block m-b-none image_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="image_upload"></span>
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">类型：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['types'])){ $info['types'] = '0'; }; ?>
+							<input name="types" value="0" type="radio" {if condition="$info.types eq '0'"}checked{/if} title="内部页面">
+							<input name="types" value="1" type="radio" {if condition="$info.types eq '1'"}checked{/if} title="外部链接">
+							<input name="types" value="2" type="radio" {if condition="$info.types eq '2'"}checked{/if} title="外部小程序">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">起步价：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="start" value="{$info.start}" name="start" class="form-control" placeholder="请输入起步价">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">阶梯价格：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ladder" value="{$info.ladder}" name="ladder" class="form-control" placeholder="请输入阶梯价格">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"> 跳转的路径或者小程序APPID：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="appid" value="{$info.appid}" name="appid" class="form-control" placeholder="请输入 跳转的路径或者小程序APPID">
+							<div>
+								<p>* 取快递模块路径为：/gc_school/pages/public/index?type=1</p>
+								<p>* 寄快递模块路径为：/gc_school/pages/public/index?type=2</p>
+								<p>* 食堂超市模块路径为：/gc_school/pages/canteen/canteen?type=1</p>
+								<p>* 万能任务模块路径为：/gc_school/pages/public/index?type=4</p>
+								{if $discount == 1}
+								<p>* 特价优惠填写 zby </p>
+								<p>* 大牌优惠券填写 food </p>
+								<p>* 折扣会员填写 digital </p>
+								<p>* 电影填写 dianying (学校无返佣) </p>
+								{/if}
+								<p>其余小程序路径需在地址后加?types=1</p>
+								<p style="color:red;">跳转小程序指定页面例：wx21847c07c27f2780;/gc_school/pages/article/index</p>
+							</div>
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+uploader('image_upload','image','image',false,'','{:getUploadServerUrl()}');
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('id').set('title').set('sort').set('image').set('start').set('ladder').set('s_id').set('wxapp_id').set('appid');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var types = $("input[name = 'types']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/Dmhmodular/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('types',types);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

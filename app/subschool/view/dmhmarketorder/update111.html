@@ -1,0 +1,128 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='id' id='id' value="{$info.id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">图标：</label>
+						<div class="col-sm-6">
+							<img src="{$info.image}" style="width: 100px;height: 100px">
+						</div>
+
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">名称：</label>
+						<div class="col-sm-9">
+							<input type="text" disabled autocomplete="off" id="title" value="{$info.title}" name="title" class="form-control" placeholder="请输入名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">金额：</label>
+						<div class="col-sm-9">
+							<input type="text" disabled autocomplete="off" id="pay" value="{$info.pay}" name="pay" class="form-control" placeholder="请输入金额">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">原价：</label>
+						<div class="col-sm-9">
+							<input type="text" disabled autocomplete="off" id="price" value="{$info.price}" name="price" class="form-control" placeholder="请输入原价">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">详情描述：</label>
+						<div class="col-sm-9">
+							<input type="text" disabled autocomplete="off" id="details" value="{$info.details}" name="details" class="form-control" placeholder="请输入详情描述">
+						</div>
+					</div>
+
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">状态：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['state'])){ $info['state'] = 2; }; ?>
+							<input name="paystate" value="3" type="radio" {if condition="$info.paystate eq '3'"}checked{/if} title="同意退款">
+							<input name="paystate" value="1" type="radio" {if condition="$info.paystate eq '1'"}checked{/if} title="拒绝退款">
+						</div>
+					</div>
+
+
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script src='__PUBLIC__/static/js/plugins/paixu/jquery-migrate-1.1.1.js'></script>
+<script src='__PUBLIC__/static/js/plugins/paixu/jquery.dragsort-0.5.1.min.js'></script>
+<script>
+$(function(){
+	$(".filelist").dragsort({dragSelector: "img",dragBetween: true ,dragEnd:function(){}});
+});
+layui.use(['form'],function(){});
+uploader('image_upload','image','image',false,'','{:getUploadServerUrl()}');
+uploader('rotation_upload','rotation','image',true,'{$info.rotation}','{:getUploadServerUrl()}');
+setUploadButton('rotation_upload');
+laydate.render({elem: '#create_time',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('id').set('paystate');
+};
+
+CodeInfoDlg.update = function () {
+    console.log('---')
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var state = $("input[name = 'state']:checked").val();
+	 var examine = $("input[name = 'examine']:checked").val();
+	 var rotation = {};
+	 $(".rotation li").each(function() {
+		if($(this).find('img').attr('src')){
+	 		rotation[$(this).index()] = {'url':$(this).find('img').attr('src'),'title':$(this).find('input').val()};
+		}
+	 });
+	 var ajax = new $ax(Feng.ctxPath + "/Dmhmarketorder/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('state',state);
+	 ajax.set('examine',examine);
+	 ajax.set('rotation',(JSON.stringify(rotation) == '{}' || JSON.stringify(rotation) == '{"":""}') ? '' : JSON.stringify(rotation));
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

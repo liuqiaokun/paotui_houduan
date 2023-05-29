@@ -1,0 +1,124 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='id' id='id' value="{$info.id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="name" value="{$info.name}" name="name" class="form-control" placeholder="请输入名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">图片（380*176）：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="img" value="{$info.img}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="img" class="form-control" placeholder="请输入图片">
+							<span class="help-block m-b-none img_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="img_upload"></span>
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">显示位置：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['show_type'])){ $info['show_type'] = '1'; }; ?>
+							<input name="show_type" value="1" type="radio" {if condition="$info.show_type eq '1'"}checked{/if} title="首页">
+							<input name="show_type" value="2" type="radio" {if condition="$info.show_type eq '2'"}checked{/if} title="二手市场">
+							<input name="show_type" value="3" type="radio" {if condition="$info.show_type eq '3'"}checked{/if} title="论坛">
+							<input name="show_type" value="4" type="radio" {if condition="$info.show_type eq '4'"}checked{/if} title="失物招领">
+							<input name="show_type" value="5" type="radio" {if condition="$info.show_type eq '5'"}checked{/if} title="商家列表">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">跳转类型：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['url_type'])){ $info['url_type'] = '1'; }; ?>
+							<input name="url_type" value="1" type="radio" {if condition="$info.url_type eq '1'"}checked{/if} title="内部页面">
+							<input name="url_type" value="2" type="radio" {if condition="$info.url_type eq '2'"}checked{/if} title="外部小程序">
+							<input name="url_type" value="3" type="radio" {if condition="$info.url_type eq '3'"}checked{/if} title="外部链接">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">url地址：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="url" value="{$info.url}" name="url" class="form-control" placeholder="请输入url地址">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+uploader('img_upload','img','image',false,'','{:getUploadServerUrl()}');
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+		name: {
+			validators: {
+				notEmpty: {
+					message: '名称不能为空'
+	 			},
+	 		}
+	 	},
+		img: {
+			validators: {
+				notEmpty: {
+					message: '图片不能为空'
+	 			},
+	 		}
+	 	},
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('id').set('name').set('wxapp_id').set('s_id').set('img').set('url');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var show_type = $("input[name = 'show_type']:checked").val();
+	 var url_type = $("input[name = 'url_type']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/Slide/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('show_type',show_type);
+	 ajax.set('url_type',url_type);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

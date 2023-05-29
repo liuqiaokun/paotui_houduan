@@ -1,0 +1,378 @@
+{extend name='common/_container'}
+{block name="content"}
+<style>
+	.nont{
+		display: none;
+	}
+</style>
+<div class="ibox float-e-margins">
+<input type="hidden" name='id' id='id' value="{$info.id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">编号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="id" value="{$info.id}" name="id" class="form-control" placeholder="请输入编号">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">订单号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ordersn" value="{$info.ordersn}" name="ordersn" class="form-control" placeholder="请输入订单号">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">图片：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="img" value="{$info.img}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="img" class="form-control" placeholder="请输入图片">
+							<span class="help-block m-b-none img_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="img_upload"></span>
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">订单类型：</label>
+						<div class="col-sm-9">
+							<select lay-ignore name="type" class="form-control" id="type">
+								<option value="">请选择</option>
+								<option value="1" {if condition="$info.type eq '1'"}selected{/if}>取件</option>
+								<option value="2" {if condition="$info.type eq '2'"}selected{/if}>寄件</option>
+								<option value="3" {if condition="$info.type eq '3'"}selected{/if}>超市食堂</option>
+								<option value="4" {if condition="$info.type eq '4'"}selected{/if}>无所不能/饮品</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">商品id：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="goods_id" value="{$info.goods_id}" name="goods_id" class="form-control" placeholder="请输入商品id">
+						</div>
+					</div>
+					<div class="form-group ">
+						<label class="col-sm-2 control-label">订单的完成状态：</label>
+						<div class="col-sm-9">
+							<select lay-ignore name="status" class="form-control" id="status">
+								<option value="">请选择</option>
+								<option value="1" {if condition="$info.status eq '1'"}selected{/if}>未支付</option>
+								<option value="2" {if condition="$info.status eq '2'"}selected{/if}>待接单</option>
+								<option value="3" {if condition="$info.status eq '3'"}selected{/if}>待取货</option>
+								<option value="7" {if condition="$info.status eq '7'"}selected{/if}>待送达</option>
+								<option value="4" {if condition="$info.status eq '4'"}selected{/if}>已完成</option>
+								<option value="5" {if condition="$info.status eq '5'"}selected{/if}>已过期</option>
+								<option value="6" {if condition="$info.status eq '6'"}selected{/if}>未完成</option>
+								<option value="8" {if condition="$info.status eq '8'"}selected{/if}>已取消</option>
+								<option value="9" {if condition="$info.status eq '9'"}selected{/if}>等待取消抢单</option>
+								<option value="10" {if condition="$info.status eq '10'"}selected{/if}>待到店</option>
+								<option value="11" {if condition="$info.status eq '11'"}selected{/if}>已送达</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">订单备注：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="remarks" value="{$info.remarks}" name="remarks" class="form-control" placeholder="请输入订单备注">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">附件地址：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="attach_file" value="{$info.attach_file}" name="attach_file" class="form-control" placeholder="请输入附件地址">
+						</div>
+					</div>
+					<div class="form-group layui-form nont">
+						<label class="col-sm-2 control-label">接单员性别限制：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['sex_limit'])){ $info['sex_limit'] = '0'; }; ?>
+							<input name="sex_limit" value="0" type="radio" {if condition="$info.sex_limit eq '0'"}checked{/if} title="无限制">
+							<input name="sex_limit" value="1" type="radio" {if condition="$info.sex_limit eq '1'"}checked{/if} title="男">
+							<input name="sex_limit" value="2" type="radio" {if condition="$info.sex_limit eq '2'"}checked{/if} title="女">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">物品重量：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="weight" value="{$info.weight}" name="weight" class="form-control" placeholder="请输入物品重量">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">件数：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="express_num" value="{$info.express_num}" name="express_num" class="form-control" placeholder="请输入件数">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">开始时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" value="{if condition="$info.start_time neq ''"}{$info.start_time|date='Y-m-d H:i:s'}{/if}" name="start_time"  placeholder="请输入开始时间" class="form-control" id="start_time">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">预计上门时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" value="{if condition="$info.door_time neq ''"}{$info.door_time|date='Y-m-d H:i:s'}{/if}" name="door_time"  placeholder="请输入预计上门时间" class="form-control" id="door_time">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">发起用户openid：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="start_openid" value="{$info.start_openid}" name="start_openid" class="form-control" placeholder="请输入发起用户openid">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">抢单用户openid：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="end_openid" value="{$info.end_openid}" name="end_openid" class="form-control" placeholder="请输入抢单用户openid">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">收货姓名：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="sh_name" value="{$info.sh_name}" name="sh_name" class="form-control" placeholder="请输入收货姓名">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">收货性别：</label>
+						<div class="col-sm-9">
+							<select lay-ignore name="sh_sex" class="form-control" id="sh_sex">
+								<option value="">请选择</option>
+								<option value="1" {if condition="$info.sh_sex eq '1'"}selected{/if}>男</option>
+								<option value="2" {if condition="$info.sh_sex eq '2'"}selected{/if}>女</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">收货联系手机号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="sh_phone" value="{$info.sh_phone}" name="sh_phone" class="form-control" placeholder="请输入收货联系手机号">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">收货学校：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="sh_school" value="{$info.sh_school}" name="sh_school" class="form-control" placeholder="请输入收货学校">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">具体收货地址：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="sh_addres" value="{$info.sh_addres}" name="sh_addres" class="form-control" placeholder="请输入具体收货地址">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">服务人数：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="service_num" value="{$info.service_num}" name="service_num" class="form-control" placeholder="请输入服务人数">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">取货具体地址：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="qu_addres" value="{$info.qu_addres}" name="qu_addres" class="form-control" placeholder="请输入取货具体地址">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">优惠券id：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="co_id" value="{$info.co_id}" name="co_id" class="form-control" placeholder="请输入优惠券id">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="co_name" value="{$info.co_name}" name="co_name" class="form-control" placeholder="请输入名称">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">商品预估价：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="guess_price" value="{$info.guess_price}" name="guess_price" class="form-control" placeholder="请输入商品预估价">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">商家id：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="store_id" value="{$info.store_id}" name="store_id" class="form-control" placeholder="请输入商家id">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">优惠券金额：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="y_money" value="{$info.y_money}" name="y_money" class="form-control" placeholder="请输入优惠券金额">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">总价（跑腿费）：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="total" value="{$info.total}" name="total" class="form-control" placeholder="请输入总价（跑腿费）">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">实付金额：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="t_money" value="{$info.t_money}" name="t_money" class="form-control" placeholder="请输入实付金额">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">跑腿被抽取的手续费：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="s_money" value="{$info.s_money}" name="s_money" class="form-control" placeholder="请输入跑腿被抽取的手续费">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">学校收取手续费：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="fxs_money" value="{$info.fxs_money}" name="fxs_money" class="form-control" placeholder="请输入学校收取手续费">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">商家抽成费用：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="store_money" value="{$info.store_money}" name="store_money" class="form-control" placeholder="请输入商家抽成费用">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">商品价格：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="food_money" value="{$info.food_money}" name="food_money" class="form-control" placeholder="请输入商品价格">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">创建时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" value="{if condition="$info.createtime neq ''"}{$info.createtime|date='Y-m-d H:i:s'}{/if}" name="createtime"  placeholder="请输入创建时间" class="form-control" id="createtime">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">更新时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" value="{if condition="$info.updatetime neq ''"}{$info.updatetime|date='Y-m-d H:i:s'}{/if}" name="updatetime"  placeholder="请输入更新时间" class="form-control" id="updatetime">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">订单过期时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" value="{if condition="$info.out_time neq ''"}{$info.out_time|date='Y-m-d H:i:s'}{/if}" name="out_time"  placeholder="请输入订单过期时间" class="form-control" id="out_time">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">取消时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" value="{if condition="$info.cancel_time neq ''"}{$info.cancel_time|date='Y-m-d H:i:s'}{/if}" name="cancel_time"  placeholder="请输入取消时间" class="form-control" id="cancel_time">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">商品详情：</label>
+						<div class="col-sm-9">
+							<script id="good_details" type="text/plain" name="good_details" style="width:100%;height:300px;">{$info.good_details}</script>
+							<script type="text/javascript">
+								var ue = UE.getEditor('good_details',{serverUrl : '{:url("accounts/Upload/uploadUeditor")}'});
+								scaleEnabled:true
+							</script>
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">取消抢单来自哪一方:user:下单者,rider:骑手：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="cancel_from" value="{$info.cancel_from}" name="cancel_from" class="form-control" placeholder="请输入取消抢单来自哪一方:user:下单者,rider:骑手">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">拒绝原因：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="refuse_reason" value="{$info.refuse_reason}" name="refuse_reason" class="form-control" placeholder="请输入拒绝原因">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">凭证：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="proof" value="{$info.proof}" name="proof" class="form-control" placeholder="请输入凭证">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">是否拒绝：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="is_refuse" value="{$info.is_refuse}" name="is_refuse" class="form-control" placeholder="请输入是否拒绝">
+						</div>
+					</div>
+					<div class="form-group nont">
+						<label class="col-sm-2 control-label">标题：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="title" value="{$info.title}" name="title" class="form-control" placeholder="请输入标题">
+						</div>
+					</div>
+					<div class="form-group nont" >
+						<label class="col-sm-2 control-label">开始时间是否显示：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="is_start_show" value="{$info.is_start_show}" name="is_start_show" class="form-control" placeholder="请输入开始时间是否显示">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+uploader('img_upload','img','image',false,'','{:getUploadServerUrl()}');
+laydate.render({elem: '#start_time',type: 'datetime',trigger:'click'});
+laydate.render({elem: '#door_time',type: 'datetime',trigger:'click'});
+laydate.render({elem: '#createtime',type: 'datetime',trigger:'click'});
+laydate.render({elem: '#updatetime',type: 'datetime',trigger:'click'});
+laydate.render({elem: '#out_time',type: 'datetime',trigger:'click'});
+laydate.render({elem: '#cancel_time',type: 'datetime',trigger:'click'});
+laydate.render({elem: '#out_time_num',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('id').set('id').set('s_id').set('wxapp_id').set('ordersn').set('img').set('type').set('goods_id').set('status').set('remarks').set('attach_file').set('weight').set('express_num').set('start_time').set('door_time').set('start_openid').set('end_openid').set('sh_name').set('sh_sex').set('sh_phone').set('sh_school').set('sh_addres').set('service_num').set('qu_addres').set('co_id').set('co_name').set('guess_price').set('store_id').set('y_money').set('total').set('t_money').set('s_money').set('fxs_money').set('store_money').set('food_money').set('createtime').set('updatetime').set('out_time').set('cancel_time').set('out_time_num').set('cancel_from').set('refuse_reason').set('proof').set('is_refuse').set('title').set('is_start_show');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var sex_limit = $("input[name = 'sex_limit']:checked").val();
+	 var good_details = UE.getEditor('good_details').getContent();
+	 var ajax = new $ax(Feng.ctxPath + "/Order/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('sex_limit',sex_limit);
+	 ajax.set('good_details',good_details);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

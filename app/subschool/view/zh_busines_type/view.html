@@ -1,0 +1,27 @@
+{extend name='common/_container'} 
+{block name="content"} 
+<div class="ibox float-e-margins"> 
+	<div class="ibox-content"> 
+		<table class="table table-bordered" style="word-break:break-all;"> 
+			<tbody> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">分类名称：</td> 
+					<td>{$info.type_name}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">创建时间：</td> 
+					<td>{if $info.createtime}{$info.createtime|date='Y-m-d H:i:s'}{/if}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">分类图片：</td> 
+					<td><a href="javascript:void(0)"  onclick="openImg('{$info.type_image}')"><img height="75" src="{$info.type_image}"></a></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">排序：</td> 
+					<td>{$info.sort}</td>   
+				</tr> 
+			</tbody> 
+		</table> 
+	</div> 
+</div> 
+{/block} 

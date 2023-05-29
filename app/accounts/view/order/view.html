@@ -1,0 +1,173 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<table class="table table-bordered" style="word-break:break-all;">
+			<tbody>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">图片：</td>
+				<td>
+					{volist name="info.img" id="vo" }
+					<a href="javascript:void(0)"  onclick="openImg('{$vo}')"><img height="75" src="{$vo}">
+					</a>
+					{/volist}
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">微信昵称：</td>
+				<td>{$info.nickname}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">用户头像：</td>
+				<td>
+					<a href="javascript:void(0)"  onclick="openImg('{$info.avatar}')"><img height="75" src="{$info.avatar}">
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">标题：</td>
+				<td>{$info.title}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">订单备注：</td>
+				<td>{$info.remarks}</td>
+			</tr>
+			{eq name="info.type" value="1"}
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">快递信息：</td>
+				<td>
+					{volist name="info.express_info" id="vo" }
+					<div>{$vo.specs}-{$vo.price}-{$vo.code}</div>
+					{/volist}
+				</td>
+			</tr>
+			{/eq}
+			{eq name="info.type" value="2"}
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">快递信息：</td>
+				<td>
+					{volist name="info.express_info" id="vo" }
+					<div>{$vo.specs}-{$vo.price}</div>
+					{/volist}
+				</td>
+			</tr>
+			{/eq}
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">附件地址：</td>
+				<td>{$info.attach_file}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">骑手姓名：</td>
+				<td>{$info.rider_name}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">骑手电话：</td>
+				<td>{$info.rider_phone}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">接单员性别限制：</td>
+				<td><?php echo getFieldVal($info["sex_limit"],"无限制|0|primary,男|1|success,女|2|warning");?></td>
+			</tr>
+			<!--<tr>-->
+				<!--<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">物品重量：</td>-->
+				<!--<td>{$info.weight}</td>-->
+			<!--</tr>-->
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">件数：</td>
+				<td>{$info.express_num}</td>
+			</tr>
+			<tr>
+				{eq name="info.type" value="2"}
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">取货姓名：</td>
+				<td>{$info.qu_name}</td>
+				{else}
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">收货姓名：</td>
+				<td>{$info.sh_name}</td>
+				{/eq}
+			</tr>
+			<tr>
+				{eq name="info.type" value="2"}
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">取货联系手机号：</td>
+				<td>{$info.qu_phone}</td>
+				{else}
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">收货联系手机号：</td>
+				<td>{$info.sh_phone}</td>
+				{/eq}
+			</tr>
+			<tr>
+				{eq name="info.type" value="2"}
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">具体取货地址：</td>
+				<td>{$info.qu_addres}</td>
+				{else}
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">具体收货地址：</td>
+				<td>{$info.sh_addres}</td>
+				{/eq}
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">服务人数：</td>
+				<td>{$info.service_num}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">优惠券金额：</td>
+				<td>{$info.y_money}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">总价（跑腿费）：</td>
+				<td>{$info.total}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">实付金额：</td>
+				<td>{$info.t_money}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">平台跑腿抽成：</td>
+				<td>{$info.s_money}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">学校跑腿抽成：</td>
+				<td>{$info.fxs_money}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">平台商家抽成：</td>
+				<td>{$info.store_money}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">学校商家抽成：</td>
+				<td>{$info.fx_store_money}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商品价格：</td>
+				<td>{$info.food_money}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">服务费：</td>
+				<td>{$info.service_price}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">餐盒费：</td>
+				<td>{$info.box_fee}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">创建时间：</td>
+				<td>{if $info.createtime}{$info.createtime|date='Y-m-d H:i:s'}{/if}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商品详情：</td>
+				<td>{$info.good_details|html_out}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">拒绝原因：</td>
+				<td>{$info.refuse_reason}</td>
+			</tr>
+			<tr>
+				<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">凭证：</td>
+				<td>
+					<a href="javascript:void(0)"  onclick="openImg('{$info.proof}')"><img height="75" src="{$info.proof}">
+					</a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+{/block} 

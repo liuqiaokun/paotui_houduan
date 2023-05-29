@@ -1,0 +1,129 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商品：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['m_id'])){ $info['m_id'] = ''; }; ?>
+							<select lay-ignore name="m_id" class="form-control" id="m_id">
+								<option value="">请选择</option>
+								{sql connect="mysql" query="select id,title from gc_dmh_market_goods"}
+									<option value="{$sql.id}" {if condition="$info.m_id eq $sql.id"}selected{/if}>{$sql.title}</option>
+								{/sql}
+							</select>
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">状态：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['state'])){ $info['state'] = 2; }; ?>
+							<input name="state" value="2" type="radio" {if condition="$info.state eq '2'"}checked{/if} title="已完成">
+							<input name="state" value="1" type="radio" {if condition="$info.state eq '1'"}checked{/if} title="已支付">
+							<input name="state" value="0" type="radio" {if condition="$info.state eq '0'"}checked{/if} title="未支付">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">下单人手机号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="phone" value="" name="phone" class="form-control" placeholder="请输入下单人手机号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">下单人姓名：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="name" value="" name="name" class="form-control" placeholder="请输入下单人姓名">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">其他信息：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="other" value="" name="other" class="form-control" placeholder="请输入其他信息">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">购买用户id：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="purchase" value="" name="purchase" class="form-control" placeholder="请输入购买用户id">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">支付状态：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="paystate" value="" name="paystate" class="form-control" placeholder="请输入支付状态">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">退款理由：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="reason" value="" name="reason" class="form-control" placeholder="请输入退款理由">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">平台扣点：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="commission" value="" name="commission" class="form-control" placeholder="请输入平台扣点">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.add()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+laydate.render({elem: '#create_time',type: 'datetime',trigger:'click'});
+laydate.render({elem: '#pay_time',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('id').set('m_id').set('phone').set('name').set('other').set('create_time').set('pay_time').set('purchase').set('paystate').set('reason').set('commission');
+};
+
+CodeInfoDlg.add = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var state = $("input[name = 'state']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/Dmhmarketorder/add", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('state',state);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

@@ -1,0 +1,47 @@
+{extend name='common/_container'} 
+{block name="content"} 
+<div class="ibox float-e-margins"> 
+	<div class="ibox-content"> 
+		<table class="table table-bordered" style="word-break:break-all;"> 
+			<tbody> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">排序：</td> 
+					<td>{$info.sort}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">分类名称：</td> 
+					<td>{$info.class_name}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">图标：</td> 
+					<td><a href="javascript:void(0)"  onclick="openImg('{$info.icon}')"><img height="75" src="{$info.icon}"></a></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">图片：</td> 
+					<td><a href="javascript:void(0)"  onclick="openImg('{$info.img}')"><img height="75" src="{$info.img}"></a></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">创建时间：</td> 
+					<td>{if $info.createtime}{$info.createtime|date='Y-m-d H:i:s'}{/if}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">首页推荐：</td> 
+					<td><?php echo getFieldVal($info["is_recommend"],"开启|1,关闭|0");?></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">跳转链接：</td> 
+					<td>{$info.url}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">是否是分类：</td> 
+					<td><?php echo getFieldVal($info["is_cate"],"开启|1,关闭|0");?></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">是否认证可看：</td> 
+					<td><?php echo getFieldVal($info["is_auth_watch"],"开启|1,关闭|0");?></td>   
+				</tr> 
+			</tbody> 
+		</table> 
+	</div> 
+</div> 
+{/block} 

@@ -1,0 +1,329 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='s_id' id='s_id' value="{$info.s_id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">学校名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="s_name" value="{$info.s_name}" name="s_name" class="form-control" placeholder="请输入学校名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">学校logo：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="logo" value="{$info.logo}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="logo" class="form-control" placeholder="请输入学校logo">
+							<span class="help-block m-b-none logo_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="logo_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">所在地区：</label>
+						<div class="distpicker5">
+							<div class="col-sm-3">
+								<select lay-ignore id="province" class="form-control" data-province="{$info.province}"></select>
+							</div>
+							<div class="col-sm-3">
+								<select lay-ignore id="city" class="form-control" data-city="{$info.city}"></select>
+							</div>
+						</div>
+					</div>
+					<script src="https://test.fkynet.net/distpicker.data.js"></script>
+					<script src="__PUBLIC__/static/js/plugins/shengshiqu/distpicker.js"></script>
+					<script src="__PUBLIC__/static/js/plugins/shengshiqu/main.js"></script>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">跑腿平台抽成：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="plat_rate" value="{$info.plat_rate}" name="plat_rate" class="form-control" placeholder="请输入跑腿平台抽成">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">跑腿学校抽成：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="school_rate" value="{$info.school_rate}" name="school_rate" class="form-control" placeholder="请输入跑腿学校抽成">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">二手市场平台抽成：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="second_rate" value="{$info.second_rate}" name="second_rate" class="form-control" placeholder="请输入二手市场平台抽成">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">二手市场分校抽成：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="fx_second_rate" value="{$info.fx_second_rate}" name="fx_second_rate" class="form-control" placeholder="请输入二手市场分校抽成">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">是否允许分校修改抽佣：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['edit_status'])){ $info['edit_status'] = '1'; }; ?>
+							<input name="edit_status" value="1" type="radio" {if condition="$info.edit_status eq '1'"}checked{/if} title="允许">
+							<input name="edit_status" value="0" type="radio" {if condition="$info.edit_status eq '0'"}checked{/if} title="不允许">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">机器人key：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="robot_key" value="{$info.robot_key}" name="robot_key" class="form-control" placeholder="请输入机器人key">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">阶梯选择配置：</label>
+						<div class="col-sm-9">
+							<textarea id="step" name="step"  class="form-control" placeholder="请输入阶梯选择配置">{$info.step}</textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">赏金抽成：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="reward_rate" value="{$info.reward_rate}" name="reward_rate" class="form-control" placeholder="请输入赏金抽成">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">优惠券列表：</label>
+						<div class="col-sm-9">
+							<?php $wxappId = session('accounts.wxapp_id'); ?>
+							<select lay-ignore name="coupon_list" class="form-control chosen" multiple data-placeholder='请选择优惠券列表'  id="coupon_list">
+								{sql connect="mysql" query="select * from gc_coupon where status=1"}
+								{if $sql.wxapp_id == $wxappId}
+								<option value="{$sql.o_id}" {if in_array($sql.o_id,explode(',',$info['coupon_list']))}selected{/if}>{$sql.c_name}</option>
+								{/if}
+								{/sql}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家平台抽成：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="store_rate" value="{$info.store_rate}" name="store_rate" class="form-control" placeholder="请输入商家平台抽成">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家分校抽成：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="fx_store_rate" value="{$info.fx_store_rate}" name="fx_store_rate" class="form-control" placeholder="请输入商家分校抽成">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">金豆分校抽成：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="bean_rate" value="{$info.bean_rate}" name="bean_rate" class="form-control" placeholder="请输入金豆分校抽成">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">每单扣除金豆数：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="deduction_num" value="{$info.deduction_num}" name="deduction_num" class="form-control" placeholder="请输入每单扣除金豆数">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">商家金豆功能：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['store_bean_switch'])){ $info['store_bean_switch'] = 1; }; ?>
+							<input name="store_bean_switch" value="1" type="radio" {if condition="$info.store_bean_switch eq '1'"}checked{/if} title="开启">
+							<input name="store_bean_switch" value="0" type="radio" {if condition="$info.store_bean_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家预警阈值：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="threshold" value="{$info.threshold}" name="threshold" class="form-control" placeholder="请输入商家预警阈值">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">状态：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['status'])){ $info['status'] = 1; }; ?>
+							<input name="status" value="1" type="radio" {if condition="$info.status eq '1'"}checked{/if} title="显示">
+							<input name="status" value="0" type="radio" {if condition="$info.status eq '0'"}checked{/if} title="隐藏">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">骑手垫付是否开启：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_open_pay'])){ $info['is_open_pay'] = '1'; }; ?>
+							<input name="is_open_pay" value="1" type="radio" {if condition="$info.is_open_pay eq '1'"}checked{/if} title="开启">
+							<input name="is_open_pay" value="0" type="radio" {if condition="$info.is_open_pay eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">商家入驻是否收费：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['charge_mode'])){ $info['charge_mode'] = '0'; }; ?>
+							<input name="charge_mode" value="0" type="radio" {if condition="$info.charge_mode eq '0'"}checked{/if} title="免费">
+							<input name="charge_mode" value="1" type="radio" {if condition="$info.charge_mode eq '1'"}checked{/if} title="收费">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家入驻价格：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="charge_price" value="{$info.charge_price}" name="charge_price" class="form-control" placeholder="请输入商家入驻价格">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<link href='__PUBLIC__/static/js/plugins/chosen/chosen.min.css' rel='stylesheet'/>
+<script src='__PUBLIC__/static/js/plugins/chosen/chosen.jquery.js'></script>
+<script>
+layui.use(['form'],function(){});
+uploader('logo_upload','logo','image',false,'','{:getUploadServerUrl()}');
+$(function(){$('.chosen').chosen({search_contains: true})})
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+        logo: {
+            validators: {
+                notEmpty: {
+                    message: '学校logo不能为空'
+                },
+            }
+        },
+        plat_rate: {
+            validators: {
+                notEmpty: {
+                    message: '跑腿平台抽成不能为空'
+                },
+                regexp: {
+                    regexp: /^([1-9]\d|\d)$/,
+                    message: '请输入0-100的整数'
+                },
+            }
+        },
+        school_rate: {
+            validators: {
+                notEmpty: {
+                    message: '跑腿学校抽成不能为空'
+                },
+                regexp: {
+                    regexp: /^([1-9]\d|\d)$/,
+                    message: '请输入0-100的整数'
+                },
+            }
+        },
+        second_rate: {
+            validators: {
+                notEmpty: {
+                    message: '二手市场平台抽成不能为空'
+                },
+                regexp: {
+                    regexp: /^([1-9]\d|\d)$/,
+                    message: '请输入0-100的整数'
+                },
+            }
+        },
+        fx_second_rate: {
+            validators: {
+                notEmpty: {
+                    message: '二手市场分校抽成不能为空'
+                },
+                regexp: {
+                    regexp: /^[0-9]*$/,
+                    message: '输入错误'
+                },
+            }
+        },
+        edit_status: {
+            validators: {
+                notEmpty: {
+                    message: '是否允许分校修改抽佣不能为空'
+                },
+            }
+        },
+        reward_rate: {
+            validators: {
+                notEmpty: {
+                    message: '赏金抽成不能为空'
+                },
+                regexp: {
+                    regexp: /^([1-9]\d|\d)$/,
+                    message: '请输入0-100的整数'
+                },
+            }
+        },
+        store_rate: {
+            validators: {
+                notEmpty: {
+                    message: '商家平台抽成不能为空'
+                },
+                regexp: {
+                    regexp: /^([1-9]\d|\d)$/,
+                    message: '请输入0-100的整数'
+                },
+            }
+        },
+        fx_store_rate: {
+            validators: {
+                notEmpty: {
+                    message: '商家分校抽成不能为空'
+                },
+                regexp: {
+                    regexp: /^([1-9]\d|\d)$/,
+                    message: '请输入0-100的整数'
+                },
+            }
+        },
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+    this.set('s_id').set('s_name').set('logo').set('province').set('city').set('plat_rate').set('school_rate').set('second_rate').set('fx_second_rate').set('robot_key').set('step').set('reward_rate').set('coupon_list').set('store_rate').set('fx_store_rate').set('bean_rate').set('deduction_num').set('threshold').set('charge_price');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var edit_status = $("input[name = 'edit_status']:checked").val();
+	 var store_bean_switch = $("input[name = 'store_bean_switch']:checked").val();
+     var status = $("input[name = 'status']:checked").val();
+     var charge_mode = $("input[name = 'charge_mode']:checked").val();
+     var is_open_pay = $("input[name = 'is_open_pay']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/School/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('edit_status',edit_status);
+	 ajax.set('store_bean_switch',store_bean_switch);
+     ajax.set('status',status);
+     ajax.set('charge_mode',charge_mode);
+     ajax.set('is_open_pay',is_open_pay);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

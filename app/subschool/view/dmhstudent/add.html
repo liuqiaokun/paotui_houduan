@@ -1,0 +1,121 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">姓名：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="name" value="" name="name" class="form-control" placeholder="请输入姓名">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">手机号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="phone" value="" name="phone" class="form-control" placeholder="请输入手机号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">备注：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="remarks" value="" name="remarks" class="form-control" placeholder="请输入备注">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">学号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="student" value="" name="student" class="form-control" placeholder="请输入学号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">照片：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="images" value="" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="images" class="form-control" placeholder="请输入照片">
+							<span class="help-block m-b-none images_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="images_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">用户id：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="u_id" value="" name="u_id" class="form-control" placeholder="请输入用户id">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">状态：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['state'])){ $info['state'] = '1'; }; ?>
+							<input name="state" value="1" type="radio" {if condition="$info.state eq '1'"}checked{/if} title="已通过">
+							<input name="state" value="0" type="radio" {if condition="$info.state eq '0'"}checked{/if} title="审核中">
+							<input name="state" value="2" type="radio" {if condition="$info.state eq '2'"}checked{/if} title="已拒绝">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">拒绝原因：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="reason" value="" name="reason" class="form-control" placeholder="请输入拒绝原因">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.add()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+uploader('images_upload','images','image',false,'','{:getUploadServerUrl()}');
+laydate.render({elem: '#create_time',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('id').set('name').set('phone').set('remarks').set('student').set('create_time').set('images').set('u_id').set('s_id').set('wxapp_id').set('reason');
+};
+
+CodeInfoDlg.add = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var state = $("input[name = 'state']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/Dmhstudent/add", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('state',state);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

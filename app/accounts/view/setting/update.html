@@ -1,0 +1,962 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='id' id='id' value="{$info.id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row" style="margin-top:-20px;">
+				<div class="layui-tab layui-tab-brief" lay-filter="test">
+					<ul class="layui-tab-title">
+						<li class="layui-this">小程序设置</li>
+						<li>财务设置</li>
+						<li>订阅消息配置</li>
+						<li>图文设置</li>
+						<li>开关设置</li>
+						<li>其他设置</li>
+						<li>万能任务设置</li>
+						<li>公众号配置</li>
+						<li>翼支付配置</li>
+					</ul>
+					<div class="layui-tab-content" style="margin-top:10px;">
+						<div class="layui-tab-item layui-show">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">小程序appid：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="appid" value="{$info.appid}" name="appid" class="form-control" placeholder="请输入小程序appid">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">小程序密钥：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="appsecret" value="{$info.appsecret}" name="appsecret" class="form-control" placeholder="请输入小程序密钥">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商户号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mch_id" value="{$info.mch_id}" name="mch_id" class="form-control" placeholder="请输入商户号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商户号密钥：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mch_key" value="{$info.mch_key}" name="mch_key" class="form-control" placeholder="请输入商户号密钥">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商户证书序列号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="serial_no" value="{$info.serial_no}" name="serial_no" class="form-control" placeholder="请输入商户证书序列号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">用户会员包月价格：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="user_month_fee" value="{$info.user_month_fee}" name="user_month_fee" class="form-control" placeholder="请输入用户会员包月价格">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">用户会员包年价格：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="user_year_fee" value="{$info.user_year_fee}" name="user_year_fee" class="form-control" placeholder="请输入用户会员包年价格">
+						</div>
+					</div>
+					<div class="form-group" style="display: none">
+						<label class="col-sm-2 control-label">商家周卡价格：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="store_week_fee" value="{$info.store_week_fee}" name="store_week_fee" class="form-control" placeholder="请输入商家周卡价格">
+						</div>
+					</div>
+					<div class="form-group" style="display: none;">
+						<label class="col-sm-2 control-label">商家月卡价格：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="store_month_fee" value="{$info.store_month_fee}" name="store_month_fee" class="form-control" placeholder="请输入商家月卡价格">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">退款证书（apiclient_cert.pem）：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="refund_cert" value="{$info.refund_cert}" name="refund_cert" class="form-control" placeholder="请输入退款证书（apiclient_cert.pem）">
+							<span class="help-block m-b-none refund_cert_process"></span>
+						</div>
+						<div class="col-sm-3" style="position:relative; right:30px;">
+							<span id="refund_cert_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">退款证书（apiclient_key.pem）：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="refund_key" value="{$info.refund_key}" name="refund_key" class="form-control" placeholder="请输入退款证书（apiclient_key.pem）">
+							<span class="help-block m-b-none refund_key_process"></span>
+						</div>
+						<div class="col-sm-3" style="position:relative; right:30px;">
+							<span id="refund_key_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">小程序代码上传密钥：</label>
+						<div class="col-sm-9">
+							<textarea id="app_up_key" name="app_up_key"  class="form-control" placeholder="请输入小程序代码上传密钥">{$info.app_up_key}</textarea>
+						</div>
+					</div>
+					{if $is_alipay == 1}
+					<div class="form-group">
+						<label class="col-sm-2 control-label">支付宝应用APPID：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="alipayappid" value="{$info.alipayappid}" name="alipayappid" class="form-control" placeholder="请输入支付宝应用id">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公钥：</label>
+						<div class="col-sm-9">
+							<textarea id="publickey" name="publickey"  class="form-control" placeholder="请输入公钥">{$info.publickey}</textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">私钥：</label>
+						<div class="col-sm-9">
+							<textarea id="privatekey" name="privatekey"  class="form-control" placeholder="请输入私钥">{$info.privatekey}</textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">支付宝公钥：</label>
+						<div class="col-sm-9">
+							<textarea id="zfbpublickey" name="zfbpublickey"  class="form-control" placeholder="请输入支付宝公钥">{$info.zfbpublickey}</textarea>
+						</div>
+					</div>
+					{/if}
+					<div class="form-group">
+						<label class="col-sm-2 control-label">订单默认完成小时数：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="order_finish_time" value="{$info.order_finish_time}" name="order_finish_time" class="form-control" placeholder="请输入订单默认完成小时数">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">阶梯价格：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="step_price" value="{$info.step_price}" name="step_price" class="form-control" placeholder="请输入阶梯价格">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">起步费：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="start_fee" value="{$info.start_fee}" name="start_fee" class="form-control" placeholder="请输入起步费">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">提现最低金额：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="withdraw_min" value="{$info.withdraw_min}" name="withdraw_min" class="form-control" placeholder="请输入提现最低金额">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">骑手订阅消息模板ID：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_new" value="{$info.template_new}" name="template_new" class="form-control" placeholder="请输入骑手订阅消息模板ID">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">用户抢单提醒：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_grab" value="{$info.template_grab}" name="template_grab" class="form-control" placeholder="请输入用户抢单提醒">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">取消订单消息提醒：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_cancel" value="{$info.template_cancel}" name="template_cancel" class="form-control" placeholder="请输入取消订单消息提醒">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家订阅消息：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_store" value="{$info.template_store}" name="template_store" class="form-control" placeholder="请输入商家订阅消息">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">圈子留言订阅消息：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_comment" value="{$info.template_comment}" name="template_comment" class="form-control" placeholder="请输入圈子留言订阅消息">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">二手市场支付订阅消息：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_pay" value="{$info.template_pay}" name="template_pay" class="form-control" placeholder="请输入二手市场支付订阅消息">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">消息提醒：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_notice" value="{$info.template_notice}" name="template_notice" class="form-control" placeholder="请输入消息提醒">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">日程提醒：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="schedule_template" value="{$info.schedule_template}" name="schedule_template" class="form-control" placeholder="请输入日程提醒">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">订单取消通知骑手消息：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_cancel_rider" value="{$info.template_cancel_rider}" name="template_cancel_rider" class="form-control" placeholder="请输入订单取消通知骑手消息">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家拒单消息提醒：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_refuse" value="{$info.template_refuse}" name="template_refuse" class="form-control" placeholder="请输入商家拒单消息提醒">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">小程序授权登录页背景图：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="xcx_login_bg" value="{$info.xcx_login_bg}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="xcx_login_bg" class="form-control" placeholder="请输入小程序授权登录页背景图">
+							<span class="help-block m-b-none xcx_login_bg_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="xcx_login_bg_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">小程序个人中心logo：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="xcx_logo" value="{$info.xcx_logo}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="xcx_logo" class="form-control" placeholder="请输入小程序个人中心logo">
+							<span class="help-block m-b-none xcx_logo_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="xcx_logo_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">海报背景图  （660*1425）：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="bg_poster" value="{$info.bg_poster}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="bg_poster" class="form-control" placeholder="请输入海报背景图 ">
+							<span class="help-block m-b-none bg_poster_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="bg_poster_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">会员协议说明：</label>
+						<div class="col-sm-9">
+							<script id="vip_content" type="text/plain" name="vip_content" style="width:100%;height:300px;">{$info.vip_content}</script>
+							<script type="text/javascript">
+								var ue = UE.getEditor('vip_content',{serverUrl : '{:url("accounts/Upload/uploadUeditor")}'});
+								scaleEnabled:true
+							</script>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">跑腿认证隐私条款：</label>
+						<div class="col-sm-9">
+							<script id="privacy_content" type="text/plain" name="privacy_content" style="width:100%;height:300px;">{$info.privacy_content}</script>
+							<script type="text/javascript">
+								var ue = UE.getEditor('privacy_content',{serverUrl : '{:url("accounts/Upload/uploadUeditor")}'});
+								scaleEnabled:true
+							</script>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">帮助中心：</label>
+						<div class="col-sm-9">
+							<script id="help_content" type="text/plain" name="help_content" style="width:100%;height:300px;">{$info.help_content}</script>
+							<script type="text/javascript">
+								var ue = UE.getEditor('help_content',{serverUrl : '{:url("accounts/Upload/uploadUeditor")}'});
+								scaleEnabled:true
+							</script>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">弹框内容：</label>
+						<div class="col-sm-9">
+							<script id="toast_content" type="text/plain" name="toast_content" style="width:100%;height:300px;">{$info.toast_content}</script>
+							<script type="text/javascript">
+								var ue = UE.getEditor('toast_content',{serverUrl : '{:url("accounts/Upload/uploadUeditor")}'});
+								scaleEnabled:true
+							</script>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家金豆充值说明：</label>
+						<div class="col-sm-9">
+							<script id="store_recharge_rule" type="text/plain" name="store_recharge_rule" style="width:100%;height:300px;">{$info.store_recharge_rule}</script>
+							<script type="text/javascript">
+								var ue = UE.getEditor('store_recharge_rule',{serverUrl : '{:url("accounts/Upload/uploadUeditor")}'});
+								scaleEnabled:true
+							</script>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">身份认证说明：</label>
+						<div class="col-sm-9">
+							<script id="explains" type="text/plain" name="explains" style="width:100%;height:300px;">{$info.explains}</script>
+							<script type="text/javascript">
+								var ue = UE.getEditor('explains',{serverUrl : '{:url("accounts/Upload/uploadUeditor")}'});
+								scaleEnabled:true
+							</script>
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">会员充值功能：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['user_vip_switch'])){ $info['user_vip_switch'] = '1'; }; ?>
+							<input name="user_vip_switch" value="1" type="radio" {if condition="$info.user_vip_switch eq '1'"}checked{/if} title="开启">
+							<input name="user_vip_switch" value="0" type="radio" {if condition="$info.user_vip_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">微信提现（关闭为支付宝提现）：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['company_pay_switch'])){ $info['company_pay_switch'] = '1'; }; ?>
+							<input name="company_pay_switch" value="1" type="radio" {if condition="$info.company_pay_switch eq '1'"}checked{/if} title="开启">
+							<input name="company_pay_switch" value="0" type="radio" {if condition="$info.company_pay_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">微信付款方式：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['pay_method'])){ $info['pay_method'] = '0'; }; ?>
+							<input name="pay_method" value="0" type="radio" {if condition="$info.pay_method eq '0'"}checked{/if} title="企业付款到零钱">
+							<input name="pay_method" value="1" type="radio" {if condition="$info.pay_method eq '1'"}checked{/if} title="商家转账到零钱">
+						</div>
+					</div>
+					{if $is_alipay == 1}
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">是否开启支付宝转账：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_alipay'])){ $info['is_alipay'] = '1'; }; ?>
+							<input name="is_alipay" value="1" type="radio" {if condition="$info.is_alipay eq '1'"}checked{/if} title="开启">
+							<input name="is_alipay" value="0" type="radio" {if condition="$info.is_alipay eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					{/if}
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">骑手是否可跨校接单：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['take_all_switch'])){ $info['take_all_switch'] = '1'; }; ?>
+							<input name="take_all_switch" value="1" type="radio" {if condition="$info.take_all_switch eq '1'"}checked{/if} title="开启">
+							<input name="take_all_switch" value="0" type="radio" {if condition="$info.take_all_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">二手市场开启审核：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['second_check_switch'])){ $info['second_check_switch'] = '1'; }; ?>
+							<input name="second_check_switch" value="1" type="radio" {if condition="$info.second_check_switch eq '1'"}checked{/if} title="开启">
+							<input name="second_check_switch" value="0" type="radio" {if condition="$info.second_check_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">论坛文章开启审核：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['article_check_switch'])){ $info['article_check_switch'] = '1'; }; ?>
+							<input name="article_check_switch" value="1" type="radio" {if condition="$info.article_check_switch eq '1'"}checked{/if} title="开启">
+							<input name="article_check_switch" value="0" type="radio" {if condition="$info.article_check_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">首页弹窗是否显示：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['index_toast_switch'])){ $info['index_toast_switch'] = '1'; }; ?>
+							<input name="index_toast_switch" value="1" type="radio" {if condition="$info.index_toast_switch eq '1'"}checked{/if} title="开启">
+							<input name="index_toast_switch" value="0" type="radio" {if condition="$info.index_toast_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">论坛匿名是否开启：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_anonymous_switch'])){ $info['is_anonymous_switch'] = '1'; }; ?>
+							<input name="is_anonymous_switch" value="1" type="radio" {if condition="$info.is_anonymous_switch eq '1'"}checked{/if} title="开启">
+							<input name="is_anonymous_switch" value="0" type="radio" {if condition="$info.is_anonymous_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">个人中心跑腿认证是否显示：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['runner_auth_switch'])){ $info['runner_auth_switch'] = '1'; }; ?>
+							<input name="runner_auth_switch" value="1" type="radio" {if condition="$info.runner_auth_switch eq '1'"}checked{/if} title="开启">
+							<input name="runner_auth_switch" value="0" type="radio" {if condition="$info.runner_auth_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">打赏是否开启：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_open_reward'])){ $info['is_open_reward'] = '1'; }; ?>
+							<input name="is_open_reward" value="1" type="radio" {if condition="$info.is_open_reward eq '1'"}checked{/if} title="开启">
+							<input name="is_open_reward" value="0" type="radio" {if condition="$info.is_open_reward eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">圈子是否显示：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['index_articles_switch'])){ $info['index_articles_switch'] = '1'; }; ?>
+							<input name="index_articles_switch" value="1" type="radio" {if condition="$info.index_articles_switch eq '1'"}checked{/if} title="开启">
+							<input name="index_articles_switch" value="0" type="radio" {if condition="$info.index_articles_switch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<!--<div class="form-group layui-form">-->
+						<!--<label class="col-sm-2 control-label">骑手垫付是否开启：</label>-->
+						<!--<div class="col-sm-9">-->
+							<!--<?php if(!isset($info['is_open_pay'])){ $info['is_open_pay'] = '1'; }; ?>-->
+							<!--<input name="is_open_pay" value="1" type="radio" {if condition="$info.is_open_pay eq '1'"}checked{/if} title="开启">-->
+							<!--<input name="is_open_pay" value="0" type="radio" {if condition="$info.is_open_pay eq '0'"}checked{/if} title="关闭">-->
+						<!--</div>-->
+					<!--</div>-->
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">首页抢单按钮配置：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['index_grab_show'])){ $info['index_grab_show'] = '0'; }; ?>
+							<input name="index_grab_show" value="0" type="radio" {if condition="$info.index_grab_show eq '0'"}checked{/if} title="不显示">
+							<input name="index_grab_show" value="1" type="radio" {if condition="$info.index_grab_show eq '1'"}checked{/if} title="仅骑手可见">
+							<input name="index_grab_show" value="2" type="radio" {if condition="$info.index_grab_show eq '2'"}checked{/if} title="用户骑手均可见">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">首页商家是否显示：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['index_store_show'])){ $info['index_store_show'] = '0'; }; ?>
+							<input name="index_store_show" value="1" type="radio" {if condition="$info.index_store_show eq '1'"}checked{/if} title="开启">
+							<input name="index_store_show" value="0" type="radio" {if condition="$info.index_store_show eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">赏金榜是否显示：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['index_rank_show'])){ $info['index_rank_show'] = '0'; }; ?>
+							<input name="index_rank_show" value="1" type="radio" {if condition="$info.index_rank_show eq '1'"}checked{/if} title="开启">
+							<input name="index_rank_show" value="0" type="radio" {if condition="$info.index_rank_show eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">商家入驻是否开启：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['store_settle'])){ $info['store_settle'] = 1; }; ?>
+							<input name="store_settle" value="1" type="radio" {if condition="$info.store_settle eq '1'"}checked{/if} title="开启">
+							<input name="store_settle" value="0" type="radio" {if condition="$info.store_settle eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">个人信息是否开启实名认证：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_real'])){ $info['is_real'] = '1'; }; ?>
+							<input name="is_real" value="1" type="radio" {if condition="$info.is_real eq '1'"}checked{/if} title="开启">
+							<input name="is_real" value="0" type="radio" {if condition="$info.is_real eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">发布圈子实名认证：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_article_auth'])){ $info['is_article_auth'] = 0; }; ?>
+							<input name="is_article_auth" value="1" type="radio" {if condition="$info.is_article_auth eq '1'"}checked{/if} title="开启">
+							<input name="is_article_auth" value="0" type="radio" {if condition="$info.is_article_auth eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">平台名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="app_name" value="{$info.app_name}" name="app_name" class="form-control" placeholder="请输入平台名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">取快递文本框提示语句：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="qu_tips" value="{$info.qu_tips}" name="qu_tips" class="form-control" placeholder="请输入取快递文本框提示语句">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">寄快递文本框提示语句：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ji_tips" value="{$info.ji_tips}" name="ji_tips" class="form-control" placeholder="请输入寄快递文本框提示语句">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">食堂超市文本框提示语句：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="shi_tips" value="{$info.shi_tips}" name="shi_tips" class="form-control" placeholder="请输入食堂超市文本框提示语句">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">万能任务文本框提示语句：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="wan_tips" value="{$info.wan_tips}" name="wan_tips" class="form-control" placeholder="请输入万能任务文本框提示语句">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">提现提示语句配置：</label>
+						<div class="col-sm-9">
+							<input maxlength="5" type="text" autocomplete="off" id="withdraw_tips" value="{$info.withdraw_tips}" name="withdraw_tips" class="form-control" placeholder="请输入提现提示语句配置">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">首页广告位类型：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['home_adv_type'])){ $info['home_adv_type'] = '1'; }; ?>
+							<input name="home_adv_type" value="1" type="radio" {if condition="$info.home_adv_type eq '1'"}checked{/if} title="banner">
+							<input name="home_adv_type" value="2" type="radio" {if condition="$info.home_adv_type eq '2'"}checked{/if} title="视频">
+						</div>
+					</div>
+								{if $discount == 1}
+					<div class="form-group">
+						<label class="col-sm-2 control-label">推客联盟key：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="apikey" value="{$info.apikey}" name="apikey" class="form-control" placeholder="请输入推客联盟key">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">推客联盟code：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="code" value="{$info.code}" name="code" class="form-control" placeholder="请输入推客联盟code">
+						</div>
+					</div>
+                    <div class="form-group">
+						<label class="col-sm-2 control-label">推客联盟pub_id：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="pub_id" value="{$info.pub_id}" name="pub_id" class="form-control" placeholder="请输入推客联盟pub_id">
+						</div>
+					</div>
+					<!--<div class="form-group">-->
+						<!--<label class="col-sm-2 control-label">平台分佣(整数)：</label>-->
+						<!--<div class="col-sm-9">-->
+							<!--<input type="text" autocomplete="off" id="wxapppay" value="{$info.wxapppay}" name="wxapppay" class="form-control" placeholder="请输入平台分佣">-->
+						<!--</div>-->
+					<!--</div>-->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">学校分佣(整数)：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="schoolpay" value="{$info.schoolpay}" name="schoolpay" class="form-control" placeholder="请输入学校分佣">
+						</div>
+					</div>
+						{/if}
+					<div class="form-group">
+						<label class="col-sm-2 control-label">首页广告位id：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="home_adv_id" value="{$info.home_adv_id}" name="home_adv_id" class="form-control" placeholder="请输入首页广告位id">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">二手市场广告位类型：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['second_adv_type'])){ $info['second_adv_type'] = '1'; }; ?>
+							<input name="second_adv_type" value="1" type="radio" {if condition="$info.second_adv_type eq '1'"}checked{/if} title="banner">
+							<input name="second_adv_type" value="2" type="radio" {if condition="$info.second_adv_type eq '2'"}checked{/if} title="视频">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">二手市场广告位id：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="second_adv_id" value="{$info.second_adv_id}" name="second_adv_id" class="form-control" placeholder="请输入二手市场广告位id">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">实名认证说明：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="dmgexplain" value="{$info.dmgexplain}" name="dmgexplain" class="form-control" placeholder="请输入实名认证说明">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">实名认证默认图：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="dmhimage" value="{$info.dmhimage}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="dmhimage" class="form-control" placeholder="请输入实名认证默认图">
+							<span class="help-block m-b-none dmhimage_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="dmhimage_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">学号替换字：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="studentdmh" value="{$info.studentdmh}" name="studentdmh" class="form-control" placeholder="请输入学号替换字">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">收货地址是否显示：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_address_show'])){ $info['is_address_show'] = '1'; }; ?>
+							<input name="is_address_show" value="1" type="radio" {if condition="$info.is_address_show eq '1'"}checked{/if} title="是">
+							<input name="is_address_show" value="0" type="radio" {if condition="$info.is_address_show eq '0'"}checked{/if} title="否">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">收货地址是否必填：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_address_must'])){ $info['is_address_must'] = '1'; }; ?>
+							<input name="is_address_must" value="1" type="radio" {if condition="$info.is_address_must eq '1'"}checked{/if} title="是">
+							<input name="is_address_must" value="0" type="radio" {if condition="$info.is_address_must eq '0'"}checked{/if} title="否">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">附件是否显示：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_attach_show'])){ $info['is_attach_show'] = '1'; }; ?>
+							<input name="is_attach_show" value="1" type="radio" {if condition="$info.is_attach_show eq '1'"}checked{/if} title="是">
+							<input name="is_attach_show" value="0" type="radio" {if condition="$info.is_attach_show eq '0'"}checked{/if} title="否">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">附件是否必填：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_attach_must'])){ $info['is_attach_must'] = '1'; }; ?>
+							<input name="is_attach_must" value="1" type="radio" {if condition="$info.is_attach_must eq '1'"}checked{/if} title="是">
+							<input name="is_attach_must" value="0" type="radio" {if condition="$info.is_attach_must eq '0'"}checked{/if} title="否">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">服务时间是否显示：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_servicetime_show'])){ $info['is_servicetime_show'] = '1'; }; ?>
+							<input name="is_servicetime_show" value="1" type="radio" {if condition="$info.is_servicetime_show eq '1'"}checked{/if} title="是">
+							<input name="is_servicetime_show" value="0" type="radio" {if condition="$info.is_servicetime_show eq '0'"}checked{/if} title="否">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">服务人数是否显示：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_servicenum_show'])){ $info['is_servicenum_show'] = '1'; }; ?>
+							<input name="is_servicenum_show" value="1" type="radio" {if condition="$info.is_servicenum_show eq '1'"}checked{/if} title="是">
+							<input name="is_servicenum_show" value="0" type="radio" {if condition="$info.is_servicenum_show eq '0'"}checked{/if} title="否">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mp_name" value="{$info.mp_name}" name="mp_name" class="form-control" placeholder="请输入公众号名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号appid：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mp_appid" value="{$info.mp_appid}" name="mp_appid" class="form-control" placeholder="请输入公众号appid">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号appsecret：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mp_secret" value="{$info.mp_secret}" name="mp_secret" class="form-control" placeholder="请输入公众号appsecret">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号骑手订阅消息模板ID：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mp_template_new" value="{$info.mp_template_new}" name="mp_template_new" class="form-control" placeholder="请输入公众号骑手订阅消息模板ID">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号用户抢单提醒：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mp_template_grab" value="{$info.mp_template_grab}" name="mp_template_grab" class="form-control" placeholder="请输入公众号用户抢单提醒">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号取消订单消息提醒：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mp_template_cancel" value="{$info.mp_template_cancel}" name="mp_template_cancel" class="form-control" placeholder="请输入公众号取消订单消息提醒">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号商家订阅消息：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mp_template_store" value="{$info.mp_template_store}" name="mp_template_store" class="form-control" placeholder="请输入公众号商家订阅消息">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号二手市场支付订阅消息	：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="mp_template_pay" value="{$info.mp_template_pay}" name="mp_template_pay" class="form-control" placeholder="请输入公众号二手市场支付订阅消息	">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号商家拒单消息提醒	：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="template_refuse_mp" value="{$info.template_refuse_mp}" name="template_refuse_mp" class="form-control" placeholder="请输入商家拒单消息提醒">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号二维码：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="mp_code" value="{$info.mp_code}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="mp_code" class="form-control" placeholder="请输入公众号二维码">
+							<span class="help-block m-b-none mp_code_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="mp_code_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公众号logo：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="mp_logo" value="{$info.mp_logo}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="mp_logo" class="form-control" placeholder="请输入公众号logo">
+							<span class="help-block m-b-none mp_logo_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="mp_logo_upload"></span>
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">支付方式：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['pay_type'])){ $info['pay_type'] = '0'; }; ?>
+							<input name="pay_type" value="0" type="radio" {if condition="$info.pay_type eq '0'"}checked{/if} title="微信支付">
+							<input name="pay_type" value="1" type="radio" {if condition="$info.pay_type eq '1'"}checked{/if} title="翼支付">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商户号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="merchant_no" value="{$info.merchant_no}" name="merchant_no" class="form-control" placeholder="请输入商户号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">证书密码：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="p12_password" value="{$info.p12_password}" name="p12_password" class="form-control" placeholder="请输入证书密码">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">私钥：</label>
+						<div class="col-sm-9">
+							<textarea id="private_key" name="private_key"  class="form-control" placeholder="请输入私钥">{$info.private_key}</textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">公钥：</label>
+						<div class="col-sm-9">
+							<textarea id="public_key" name="public_key"  class="form-control" placeholder="请输入公钥">{$info.public_key}</textarea>
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+layui.use('element', function(){
+	var element = layui.element;
+	element.on('tab(test)', function(elem){
+		uploader('xcx_login_bg_upload','xcx_login_bg','image',false,'','{:getUploadServerUrl()}');
+		uploader('xcx_logo_upload','xcx_logo','image',false,'','{:getUploadServerUrl()}');
+		uploader('bg_poster_upload','bg_poster','image',false,'','{:getUploadServerUrl()}');
+		uploader('mp_code_upload','mp_code','image',false,'','{:getUploadServerUrl()}');
+		uploader('mp_logo_upload','mp_logo','image',false,'','{:getUploadServerUrl()}');
+		uploader('dmhimage_upload','dmhimage','image',false,'','{:getUploadServerUrl()}');
+	});
+});
+uploader('xcx_login_bg_upload','xcx_login_bg','image',false,'','{:getUploadServerUrl()}');
+uploader('xcx_logo_upload','xcx_logo','image',false,'','{:getUploadServerUrl()}');
+uploader('bg_poster_upload','bg_poster','image',false,'','{:getUploadServerUrl()}');
+uploader('refund_cert_upload','refund_cert','file',false,'','{:getUploadServerUrl()}');
+uploader('refund_key_upload','refund_key','file',false,'','{:getUploadServerUrl()}');
+uploader('mp_code_upload','mp_code','image',false,'','{:getUploadServerUrl()}');
+uploader('mp_logo_upload','mp_logo','image',false,'','{:getUploadServerUrl()}');
+uploader('dmhimage_upload','dmhimage','image',false,'','{:getUploadServerUrl()}');
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+		appid: {
+			validators: {
+				notEmpty: {
+					message: '小程序appid不能为空'
+	 			},
+	 		}
+	 	},
+		step_price: {
+			validators: {
+				regexp: {
+					regexp: /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/,
+					message: '请输入正确的金额'
+	 			},
+	 		}
+	 	},
+		start_fee: {
+			validators: {
+				regexp: {
+					regexp: /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/,
+					message: '请输入正确的金额'
+	 			},
+	 		}
+	 	},
+		withdraw_min: {
+			validators: {
+				regexp: {
+					regexp: /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/,
+					message: '请输入正确的金额'
+	 			},
+	 		}
+	 	},
+		order_finish_time: {
+			validators: {
+				regexp: {
+					regexp: /^[0-9]*$/,
+					message: '请输入整数'
+	 			},
+	 		}
+	 	},
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('id').set('mp_name').set('mp_appid').set('mp_secret').set('wxapp_id').set('appid').set('appsecret').set('mch_id').set('mch_key').set('template_new').set('serial_no').set('template_grab').set('template_cancel').set('template_store').set('template_comment').set('template_pay').set('user_month_fee').set('user_year_fee').set('store_week_fee').set('store_month_fee').set('xcx_login_bg').set('xcx_logo').set('bg_poster').set('refund_cert').set('refund_key').set('app_name').set('qu_tips').set('ji_tips').set('shi_tips').set('wan_tips').set('withdraw_tips').set('schoolpay').set('apikey').set('pub_id').set('code').set('home_adv_id').set('second_adv_id').set('step_price').set('start_fee').set('withdraw_min').set('mp_template_new').set('mp_template_grab').set('mp_template_cancel').set('mp_template_store').set('mp_template_pay').set('mp_code').set('mp_logo').set('app_up_key').set('alipayappid').set('publickey').set('privatekey').set('zfbpublickey').set('order_finish_time').set('dmgexplain').set('dmhimage').set('studentdmh').set('merchant_no').set('p12_password').set('private_key').set('public_key').set('template_notice').set('schedule_template').set('template_cancel_rider').set('template_refuse').set('template_refuse_mp');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var vip_content = UE.getEditor('vip_content').getContent();
+	 var privacy_content = UE.getEditor('privacy_content').getContent();
+	 var help_content = UE.getEditor('help_content').getContent();
+	 var toast_content = UE.getEditor('toast_content').getContent();
+	 var user_vip_switch = $("input[name = 'user_vip_switch']:checked").val();
+	 var company_pay_switch = $("input[name = 'company_pay_switch']:checked").val();
+	 var pay_method = $("input[name = 'pay_method']:checked").val();
+	 var take_all_switch = $("input[name = 'take_all_switch']:checked").val();
+	 var second_check_switch = $("input[name = 'second_check_switch']:checked").val();
+	 var article_check_switch = $("input[name = 'article_check_switch']:checked").val();
+	 var index_toast_switch = $("input[name = 'index_toast_switch']:checked").val();
+	 var is_anonymous_switch = $("input[name = 'is_anonymous_switch']:checked").val();
+	 var runner_auth_switch = $("input[name = 'runner_auth_switch']:checked").val();
+	 var home_adv_type = $("input[name = 'home_adv_type']:checked").val();
+	 var second_adv_type = $("input[name = 'second_adv_type']:checked").val();
+	 var is_address_show = $("input[name = 'is_address_show']:checked").val();
+	 var is_address_must = $("input[name = 'is_address_must']:checked").val();
+	 var is_attach_show = $("input[name = 'is_attach_show']:checked").val();
+	 var is_attach_must = $("input[name = 'is_attach_must']:checked").val();
+     var is_alipay = $("input[name = 'is_alipay']:checked").val();
+	 var is_servicetime_show = $("input[name = 'is_servicetime_show']:checked").val();
+	 var is_servicenum_show = $("input[name = 'is_servicenum_show']:checked").val();
+	 var is_open_reward = $("input[name = 'is_open_reward']:checked").val();
+	 var index_articles_switch = $("input[name = 'index_articles_switch']:checked").val();
+	 var is_open_pay = $("input[name = 'is_open_pay']:checked").val();
+	 var index_grab_show = $("input[name = 'index_grab_show']:checked").val();
+	 var store_recharge_rule = UE.getEditor('store_recharge_rule').getContent();
+	 var index_store_show = $("input[name = 'index_store_show']:checked").val();
+	 var index_rank_show = $("input[name = 'index_rank_show']:checked").val();
+	 var store_settle = $("input[name = 'store_settle']:checked").val();
+	 var explains = UE.getEditor('explains').getContent();
+	 var is_real = $("input[name = 'is_real']:checked").val();
+	 var is_article_auth = $("input[name = 'is_article_auth']:checked").val();
+	 var pay_type = $("input[name = 'pay_type']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/Setting/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('vip_content',vip_content);
+	 ajax.set('privacy_content',privacy_content);
+	 ajax.set('help_content',help_content);
+	 ajax.set('toast_content',toast_content);
+	 ajax.set('user_vip_switch',user_vip_switch);
+	 ajax.set('company_pay_switch',company_pay_switch);
+	 ajax.set('pay_method',pay_method);
+	 ajax.set('take_all_switch',take_all_switch);
+	 ajax.set('second_check_switch',second_check_switch);
+	 ajax.set('article_check_switch',article_check_switch);
+	 ajax.set('index_toast_switch',index_toast_switch);
+	 ajax.set('is_anonymous_switch',is_anonymous_switch);
+	 ajax.set('runner_auth_switch',runner_auth_switch);
+	 ajax.set('home_adv_type',home_adv_type);
+	 ajax.set('second_adv_type',second_adv_type);
+	 ajax.set('is_address_show',is_address_show);
+	 ajax.set('is_address_must',is_address_must);
+	 ajax.set('is_attach_show',is_attach_show);
+	 ajax.set('is_attach_must',is_attach_must);
+	 ajax.set('is_servicetime_show',is_servicetime_show);
+	 ajax.set('is_servicenum_show',is_servicenum_show);
+	 ajax.set('is_open_reward',is_open_reward);
+     ajax.set('is_alipay',is_alipay);
+	 ajax.set('index_articles_switch',index_articles_switch);
+	 ajax.set('is_open_pay',is_open_pay);
+	 ajax.set('index_grab_show',index_grab_show);
+	 ajax.set('store_recharge_rule',store_recharge_rule);
+	 ajax.set('index_store_show',index_store_show);
+	 ajax.set('index_rank_show',index_rank_show);
+	 ajax.set('store_settle',store_settle);
+	 ajax.set('explains',explains);
+	 ajax.set('is_real',is_real);
+	 ajax.set('is_article_auth',is_article_auth);
+	 ajax.set('pay_type',pay_type);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

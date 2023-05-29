@@ -1,0 +1,93 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='business_id' id='business_id' value="{$info.business_id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">当前金豆：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="" value="{$info.balance}" class="form-control" disabled>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">赠送金豆：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="num" name="num" class="form-control" placeholder="请输入金豆数">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<link href='__PUBLIC__/static/js/plugins/chosen/chosen.min.css' rel='stylesheet'/>
+<script src='__PUBLIC__/static/js/plugins/chosen/chosen.jquery.js'></script>
+<script>
+layui.use(['form'],function(){});
+uploader('business_image_upload','business_image','image',false,'','{:getUploadServerUrl()}');
+$(function(){$('.chosen').chosen({search_contains: true})})
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+
+        num: {
+			validators: {
+				notEmpty: {
+					message: '金豆数不能为空'
+	 			},
+	 		}
+	 	},
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+    this.set('num').set('business_id');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var status = $("input[name = 'status']:checked").val();
+	 var type = $("input[name = 'type']:checked").val();
+	 var is_recommend = $("input[name = 'is_recommend']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/ZhBusiness/addbean", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('status',status);
+	 ajax.set('type',type);
+	 ajax.set('is_recommend',is_recommend);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

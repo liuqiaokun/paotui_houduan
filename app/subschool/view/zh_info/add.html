@@ -1,0 +1,136 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">物品名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="title" value="" name="title" class="form-control" placeholder="请输入物品名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">地点：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="address" value="" name="address" class="form-control" placeholder="请输入地点">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">用户openid：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="openid" value="" name="openid" class="form-control" placeholder="请输入用户openid">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">所属分类：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['type'])){ $info['type'] = ''; }; ?>
+							<select lay-ignore name="type" class="form-control" id="type">
+								<option value="">请选择</option>
+								<option value="1" {if condition="$info.type eq '1'"}selected{/if}>失物招领</option>
+								<option value="2" {if condition="$info.type eq '2'"}selected{/if}>寻物启事</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">媒体类型：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['media_type'])){ $info['media_type'] = ''; }; ?>
+							<select lay-ignore name="media_type" class="form-control" id="media_type">
+								<option value="">请选择</option>
+								<option value="1" {if condition="$info.media_type eq '1'"}selected{/if}>视频</option>
+								<option value="2" {if condition="$info.media_type eq '2'"}selected{/if}>图片</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">手机号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="phone" value="" name="phone" class="form-control" placeholder="请输入手机号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">认领方式：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="claim_method" value="" name="claim_method" class="form-control" placeholder="请输入认领方式">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">备注：</label>
+						<div class="col-sm-9">
+							<textarea id="remarks" name="remarks"  class="form-control" placeholder="请输入备注"></textarea>
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.add()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+laydate.render({elem: '#createtime',type: 'datetime',trigger:'click'});
+laydate.render({elem: '#pick_date',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+		title: {
+			validators: {
+				notEmpty: {
+					message: '物品名称不能为空'
+	 			},
+	 		}
+	 	},
+		type: {
+			validators: {
+				notEmpty: {
+					message: '所属分类不能为空'
+	 			},
+	 		}
+	 	},
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('info_id').set('title').set('address').set('openid').set('type').set('media_type').set('createtime').set('phone').set('pick_date').set('claim_method').set('remarks');
+};
+
+CodeInfoDlg.add = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var ajax = new $ax(Feng.ctxPath + "/ZhInfo/add", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

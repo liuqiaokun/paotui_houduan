@@ -1,0 +1,109 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">用户id：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="u_id" value="" name="u_id" class="form-control" placeholder="请输入用户id">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">提现账号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="account" value="" name="account" class="form-control" placeholder="请输入提现账号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">提现姓名：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="name" value="" name="name" class="form-control" placeholder="请输入提现姓名">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">提现金额：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="price" value="" name="price" class="form-control" placeholder="请输入提现金额">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">提现类型：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['type'])){ $info['type'] = '1'; }; ?>
+							<input name="type" value="1" type="radio" {if condition="$info.type eq '1'"}checked{/if} title="支付宝">
+							<input name="type" value="2" type="radio" {if condition="$info.type eq '2'"}checked{/if} title="企业付款">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">状态：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['status'])){ $info['status'] = '1'; }; ?>
+							<input name="status" value="1" type="radio" {if condition="$info.status eq '1'"}checked{/if} title="待审核">
+							<input name="status" value="2" type="radio" {if condition="$info.status eq '2'"}checked{/if} title="审核通过">
+							<input name="status" value="3" type="radio" {if condition="$info.status eq '3'"}checked{/if} title="审核拒绝">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.add()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+laydate.render({elem: '#create_time',type: 'datetime',trigger:'click'});
+laydate.render({elem: '#update_time',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('id').set('wxapp_id').set('u_id').set('account').set('name').set('price').set('create_time').set('update_time');
+};
+
+CodeInfoDlg.add = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var type = $("input[name = 'type']:checked").val();
+	 var status = $("input[name = 'status']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/UserWithdraw/add", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('type',type);
+	 ajax.set('status',status);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

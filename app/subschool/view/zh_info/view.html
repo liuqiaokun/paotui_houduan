@@ -1,0 +1,62 @@
+{extend name='common/_container'} 
+{block name="content"} 
+<div class="ibox float-e-margins"> 
+	<div class="ibox-content"> 
+		<table class="table table-bordered" style="word-break:break-all;"> 
+			<tbody> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">物品名称：</td> 
+					<td>{$info.title}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">地点：</td> 
+					<td>{$info.address}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">所属分类：</td> 
+					<td><?php echo getFieldVal($info["type"],"失物招领|1|primary,寻物启事|2|success");?></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">媒体类型：</td> 
+					<td><?php echo getFieldVal($info["media_type"],"视频|1| primary,图片|2|succes");?></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">创建时间：</td> 
+					<td>{if $info.createtime}{$info.createtime|date='Y-m-d H:i:s'}{/if}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">手机号：</td> 
+					<td>{$info.phone}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">日期：</td> 
+					<td>{if $info.pick_date}{$info.pick_date|date='Y-m-d H:i:s'}{/if}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">认领方式：</td> 
+					<td>{$info.claim_method}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">备注：</td> 
+					<td>{$info.remarks}</td>   
+				</tr> 
+				{if $info["media_type"] == 2}
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">图片：</td> 
+					<td>
+					    {foreach $info['image'] as $key=>$vo }
+    					<a href="javascript:void(0)"  onclick="openImg('{$vo}')"><img height="75" src="{$vo}"></a>
+    					{/foreach}
+    				</td>   
+				</tr>
+				{elseif $info["media_type"] == 1 /}
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">视频：</td> 
+					<td><video src="{$info.video}" style="height:200px !important;" height="" width="" preload="none" autoplay="autoplay"></video></td>   
+				</tr>
+				{/if} 
+			</tbody> 
+		</table> 
+	</div> 
+</div> 
+{/block} 

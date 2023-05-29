@@ -1,0 +1,148 @@
+{extend name='common/_container'} {block name="content"}
+<div class="row">
+	<div class="col-sm-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content"> 
+				<div class="row row-lg"> 
+					<div class="col-sm-12"> 
+						<div class="row" id="searchGroup">
+							<div class="col-sm-2">
+								<div class="input-group">
+									<div class="input-group-btn">
+										<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">支付宝姓名</button>
+									</div>
+									<input type="text" autocomplete="off" class="form-control" id="alipay_name" placeholder="支付宝姓名" />
+								</div>
+							</div>
+							<!-- search end -->
+							<div class="col-sm-1">
+								<button type="button" class="btn btn-success " onclick="CodeGoods.search()" id="">
+									<i class="fa fa-search"></i>&nbsp;搜索
+								</button>
+							</div>
+						</div>
+						<div class="btn-group-sm" id="CodeGoodsTableToolbar" role="group">
+						{if condition="in_array('accounts/Dmhschoolcarry/update',session('accounts.nodes')) || session('accounts.role_id') eq 1"}
+						<button type="button" id="update" class="btn btn-success button-margin" onclick="CodeGoods.update()">
+						<i class="fa fa-pencil"></i>&nbsp;审批
+						</button>
+						{/if}
+						</div>
+						<table id="CodeGoodsTable" data-mobile-responsive="true" data-click-to-select="true">
+							<thead><tr><th data-field="selectItem" data-checkbox="true"></th></tr></thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	var CodeGoods = {id: "CodeGoodsTable",seItem: null,table: null,layerIndex: -1};
+
+	CodeGoods.initColumn = function () {
+ 		return [
+ 			{field: 'selectItem', checkbox: true},
+ 			{title: '编号', field: 'id', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '学校名称', field: 's_name', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '状态', field: 'state', visible: true, align: 'center', valign: 'middle',sortable: true,formatter:CodeGoods.stateFormatter},
+ 			{title: '金额', field: 'pay', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '支付宝姓名', field: 'alipay_name', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '支付宝账户', field: 'alipay_account', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '添加时间', field: 'create_time', visible: true, align: 'center', valign: 'middle',sortable: true,formatter:CodeGoods.create_timeFormatter},
+ 			{title: '操作', field: '', visible: true, align: 'center', valign: 'middle',formatter: 'CodeGoods.buttonFormatter'},
+ 		];
+ 	};
+
+	CodeGoods.buttonFormatter = function(value,row,index) {
+		if(row.id){
+			var str= '';
+            if(row.state==0)
+			{
+                {if condition="in_array('accounts/Dmhschoolcarry/update',session('accounts.nodes')) || session('accounts.role_id') eq 1"}
+                str += '<button type="button" class="btn btn-success btn-xs" title="审批"  onclick="CodeGoods.update('+row.id+')"><i class="fa fa-pencil"></i>&nbsp;审批</button>&nbsp;';
+                {/if}
+	        }
+			return str;
+		}
+	}
+
+	CodeGoods.stateFormatter = function(value,row,index) {
+		if(value !== null){
+			var value = value.toString();
+			switch(value){
+				case '1':
+					return '通过';
+				break;
+				case '0':
+					return '提现中';
+				break;
+				case '2':
+					return '拒绝';
+				break;
+			}
+		}
+	}
+
+	CodeGoods.create_timeFormatter = function(value,row,index) {
+		if(value){
+			return formatDateTime(value,'Y-m-d H:i:s');	
+		}
+	}
+
+	CodeGoods.formParams = function() {
+		var queryData = {};
+		queryData['offset'] = 0;
+		queryData['wxapp_id'] = $("#wxapp_id").val();
+		queryData['alipay_name'] = $("#alipay_name").val();
+		return queryData;
+	}
+
+	CodeGoods.check = function () {
+		var selected = $('#' + this.id).bootstrapTable('getSelections');
+		if(selected.length == 0){
+			Feng.info("请先选中表格中的某一记录！");
+			return false;
+		}else{
+			CodeGoods.seItem = selected;
+			return true;
+		}
+	};
+
+	CodeGoods.update = function (value) {
+		if(value){
+			var index = layer.open({type: 2,title: '审批',area: ['800px', '400px'],fix: false, maxmin: true,content: Feng.ctxPath + '/Dmhschoolcarry/update?id='+value});
+			if(!IsPC()){layer.full(index)}
+		}else{
+			if (this.check()) {
+				var idx = '';
+				$.each(CodeGoods.seItem, function() {
+					idx += ',' + this.id;
+				});
+				idx = idx.substr(1);
+				if(idx.indexOf(",") !== -1){
+					Feng.info("请选择单条数据！");
+					return false;
+				}
+				var index = layer.open({type: 2,title: '审批',area: ['800px', '400px'],fix: false, maxmin: true,content: Feng.ctxPath + '/Dmhschoolcarry/update?id='+idx});
+				this.layerIndex = index;
+				if(!IsPC()){layer.full(index)}
+			}
+		}
+	}
+
+
+	CodeGoods.search = function() {
+		CodeGoods.table.refresh({query : CodeGoods.formParams()});
+	};
+
+	$(function() {
+		var defaultColunms = CodeGoods.initColumn();
+		var url = location.search;
+		var table = new BSTable(CodeGoods.id, Feng.ctxPath+"/Dmhschoolcarry/index"+url,defaultColunms,20);
+		table.setPaginationType("server");
+		table.setQueryParams(CodeGoods.formParams());
+		CodeGoods.table = table.init();
+	});
+</script>
+{/block}

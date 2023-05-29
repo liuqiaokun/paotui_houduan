@@ -1,0 +1,177 @@
+{extend name='common/_container'} {block name="content"}
+<div class="row">
+	<div class="col-sm-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content"> 
+				<div class="row row-lg"> 
+					<div class="col-sm-12"> 
+						<div class="row" id="searchGroup">
+							<!-- search end -->
+						</div>
+						<div class="btn-group-sm" id="CodeGoodsTableToolbar" role="group">
+						</div>
+						<table id="CodeGoodsTable" data-mobile-responsive="true" data-click-to-select="true">
+							<thead><tr><th data-field="selectItem" data-checkbox="true"></th></tr></thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	var CodeGoods = {id: "CodeGoodsTable",seItem: null,table: null,layerIndex: -1};
+
+	CodeGoods.initColumn = function () {
+ 		return [
+ 			{field: 'selectItem', checkbox: true},
+ 			{title: '编号', field: 'pid', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '名称', field: 'name', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '价格', field: 'price', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '最新版本号', field: 'version', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '描述', field: 'describes', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '到期时间', field: 'dead_date', visible: true, align: 'center', valign: 'middle',sortable: true},
+            {title: '操作', field: '', visible: true, align: 'center', valign: 'middle',formatter: 'CodeGoods.buttonFormatter'},
+ 		];
+ 	};
+
+    CodeGoods.buttonFormatter = function(value,row,index) {
+        if(row.pid){
+            var str= '';
+            if(row.is_purchase==1)		//是否购买
+			{
+			    if(row.is_install==1)	//是否已安装
+				{
+                    if(row.is_update==1)	//是否需要更新
+                    {
+                        str += '<button type="button" class="btn btn-primary btn-xs" title="立即更新"  onclick="CodeGoods.install('+row.pid+',1)">&nbsp;立即更新</button>&nbsp;';
+                    }else{
+                        str += '<button type="button" class="btn btn-success btn-xs" title="最新版" >&nbsp;最新版</button>&nbsp;';
+                    }
+				}else{
+                    str += '<button type="button" class="btn btn-success btn-xs" title="安装"  onclick="CodeGoods.install('+row.pid+',2)">&nbsp;安装</button>&nbsp;';
+				}
+
+			}else{
+                str += '<button type="button" class="btn btn-danger btn-xs" title="未购买" >&nbsp;未购买</button>&nbsp;';
+			}
+			return str;
+        }
+	}
+
+	CodeGoods.formParams = function() {
+		var queryData = {};
+		queryData['offset'] = 0;
+		return queryData;
+	}
+
+	CodeGoods.check = function () {
+		var selected = $('#' + this.id).bootstrapTable('getSelections');
+		if(selected.length == 0){
+			Feng.info("请先选中表格中的某一记录！");
+			return false;
+		}else{
+			CodeGoods.seItem = selected;
+			return true;
+		}
+	};
+
+	CodeGoods.search = function() {
+		CodeGoods.table.refresh({query : CodeGoods.formParams()});
+	};
+
+	$(function() {
+		var defaultColunms = CodeGoods.initColumn();
+		var url = location.search;
+		var table = new BSTable(CodeGoods.id, Feng.ctxPath+"/Plugins/index"+url,defaultColunms,20);
+		table.setPaginationType("server");
+		table.setQueryParams(CodeGoods.formParams());
+		CodeGoods.table = table.init();
+	});
+
+    CodeGoods.install = function (value,type) {
+        $.ajax({
+            url: Feng.ctxPath +"/Plugins/install_check",
+            type: 'POST',
+            data:{
+                pid:value,
+				type:type
+            },
+            success(res)
+            {
+                if ('00' === res.status)
+				{
+                    // Feng.success(res.msg,2000);
+					var index1 = layer.msg('验证成功，正在执行操作，请耐心等待...', {
+					    time : 3600000,
+					    icon : 16,
+					    shade : 0.01
+					});
+
+					//安装操作
+                    $.ajax({
+                        url: Feng.ctxPath + "/Plugins/install",
+                        type: 'POST',
+                        data: {
+                            url:res.data,
+							pid:value
+                        },
+                        success(res1) {
+                            layer.close(index1)
+                            Feng.success(res1.msg, 1000);
+                            location.reload();
+                        }
+                    })
+				}else{
+                    Feng.error(res.msg + "！",1000);
+				}
+                // layer.close(index1)
+                // Feng.success(res.msg,1000);
+                // location.reload();
+            }
+        })
+	}
+
+
+	//更新
+    CodeGoods.update = function (value) {
+        console.log(value)
+        // this.clearData();
+        // this.collectData();
+        // if (!this.validate()) {
+        //     return;
+        // }
+        // var ajax = new $ax(Feng.ctxPath + "/Version/test", function (data) {
+        //     if ('00' === data.status) {
+        //         console.log(data.data)
+        //         // Feng.success(data.msg,2000);
+        //         var index1 = layer.msg('正在执行操作，请耐心等待...', {
+        //             time : 3600000,
+        //             icon : 16,
+        //             shade : 0.01
+        //         });
+        //         // window.parent.CodeGoods.table.refresh();
+        //         $.ajax({
+        //             url: Feng.ctxPath +"/Version/down",
+        //             type: 'POST',
+        //             data:{
+        //                 url:data.data
+        //             },
+        //             success(res)
+        //             {
+        //                 layer.close(index1)
+        //                 Feng.success(res.msg,1000);
+        //                 location.reload();
+        //             }
+        //         })
+        //         CodeInfoDlg.close();
+        //     } else {
+        //         Feng.error(data.msg + "！",1000);
+        //     }
+        // })
+        // ajax.set(this.CodeInfoData);
+        // ajax.start();
+    };
+
+</script>
+{/block}

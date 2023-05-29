@@ -1,0 +1,143 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+    <input type="hidden" name='id' id='id' value="{$info.id}" />
+    <div class="ibox-content">
+        <div class="form-horizontal" id="CodeInfoForm">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- form start -->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">学校名称：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" id="s_name" value="{$info.s_name}" name="s_name" class="form-control" placeholder="请输入学校名称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">学校跑腿抽成：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" {if $info.edit_status == 0 } disabled {/if} id="school_rate" value="{$info.school_rate}" name="school_rate" class="form-control" placeholder="请输入学校跑腿抽成">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">学校商家抽成：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" {if $info.edit_status == 0 } disabled {/if} id="fx_store_rate" value="{$info.fx_store_rate}" name="fx_store_rate" class="form-control" placeholder="请输入学校商家抽成">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">学校二手市场抽成：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" {if $info.edit_status == 0 } disabled {/if} id="fx_second_rate" value="{$info.fx_second_rate}" name="fx_store_rate" class="form-control" placeholder="请输入学校二手市场抽成">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">机器人key：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" id="robot_key" value="{$info.robot_key}" name="robot_key" class="form-control" placeholder="请输入机器人key">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">阶梯选择配置：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" id="step" value="{$info.step}" name="step" class="form-control" placeholder="请输入阶梯选择配置">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">支付宝姓名：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" id="alipay_name" value="{$info.alipay_name}" name="alipay_name" class="form-control" placeholder="请输入支付宝姓名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">支付宝账户：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" id="alipay_account" value="{$info.alipay_account}" name="alipay_account" class="form-control" placeholder="请输入支付宝账户">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">打赏金额配置：</label>
+                        <div class="col-sm-9">
+                            <textarea name="reward" id="reward" class="form-control" placeholder="金额以;分隔开">{$info.reward}</textarea>
+                            <!--<input type="text" autocomplete="off" id="reward" value="{$info.reward}" name="reward" class="form-control" placeholder="请输入支付宝账户">-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">每单扣除金豆数：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" id="deduction_num" value="{$info.deduction_num}" name="deduction_num" class="form-control" placeholder="请输入每个订单扣除的金豆数">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">校外商家配送时间：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" id="ordertime" value="{$info.ordertime}" name="ordertime" class="form-control" placeholder="请输入点单时间">
+                            <div>
+                                <p>* 时间示例为 08:00-09:00|12:00-13:00|20:00-21:00  (每个时间段用|符号分割)</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">楼栋管理：</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" id="floor" value="{$info.floor}" name="floor" class="form-control" placeholder="请输入楼栋">
+                            <div>
+                                <p>* 楼栋管理 1栋|2栋|3栋  (每个楼栋用|符号分割)</p>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- form end -->
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="row btn-group-m-t">
+                <div class="col-sm-9 col-sm-offset-1">
+                    <button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+                        <i class="fa fa-check"></i>&nbsp;确认提交
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+                        <i class="fa fa-eraser"></i>&nbsp;取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+    var CodeInfoDlg = {
+        CodeInfoData: {},
+        validateFields: {
+        }
+    }
+    CodeInfoDlg.collectData = function () {
+        this.set('plat_rate').set('s_name').set('floor').set('school_rate').set('second_rate').set('fx_second_rate').set('robot_key').set('step').set('alipay_name').set('alipay_account').set('reward').set('deduction_num').set('ordertime').set('fx_store_rate');
+    };
+
+    CodeInfoDlg.update = function () {
+        // this.clearData();
+        this.collectData();
+        if (!this.validate()) {
+            return;
+        }
+        var ajax = new $ax(Feng.ctxPath + "/Dmhschool/update", function (data) {
+            if ('00' === data.status) {
+                Feng.success(data.msg,1000);
+                window.parent.CodeGoods.table.refresh();
+                CodeInfoDlg.close();
+            } else {
+                Feng.error(data.msg + "！",1000);
+            }
+        })
+        ajax.set(this.CodeInfoData);
+        ajax.start();
+    };
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

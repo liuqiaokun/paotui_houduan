@@ -1,0 +1,122 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<div style="color: red;font-size: 20px"> 同步数据需谨慎，同步数据出现问题本公司概不负责。</div>
+		<div style="color: red;font-size: 16px"> 1.同步数据前请备份数据库。</div>
+		<img src="https://gcgaokao.add-3d.net/tongbu/beifen.png" style="width: 100%;">
+		<img src="https://gcgaokao.add-3d.net/tongbu/beifens.png" style="width: 100%;">
+		<div style="color: red;font-size: 16px"> 2.配置远程数据库如图示例。</div>
+		<img src="https://gcgaokao.add-3d.net/tongbu/wqku.png" style="width: 100%;">
+		<div style="color: red;font-size: 16px"> 3.如果数据过多请修改宝塔的PHP超时限制和nginx限制如图示例。</div>
+		<img src="https://gcgaokao.add-3d.net/tongbu/nginxini.png" style="width: 100%;">
+		<img src="https://gcgaokao.add-3d.net/tongbu/phpini.png" style="width: 100%;">
+		<img src="https://gcgaokao.add-3d.net/tongbu/wqwxapp.png" style="width: 100%;">
+		<img src="https://gcgaokao.add-3d.net/tongbu/wqxinxis.png" style="width: 100%;">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="layui-tab layui-tab-brief" lay-filter="test">
+
+					</ul>
+					<div class="layui-tab-content" style="margin-top:10px;">
+						<div class="layui-tab-item layui-show">
+							<div class="col-sm-7">
+								<!-- form start -->
+								<div class="form-group">
+									<label class="col-sm-2 control-label">远程数据库地址：</label>
+									<div class="col-sm-9">
+										<input type="text" autocomplete="off" id="urladdress" value="{$info.urladdress}" name="urladdress" class="form-control" placeholder="请输入数据库地址">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">数据库账号：</label>
+									<div class="col-sm-9">
+										<input type="text" autocomplete="off" id="username" value="{$info.username}" name="username" class="form-control" placeholder="请输入数据库账号">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">数据库名称：</label>
+									<div class="col-sm-9">
+										<input type="text" autocomplete="off" id="libraryname" value="{$info.libraryname}" name="libraryname" class="form-control" placeholder="请输入数据库名称">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">数据库密码：</label>
+									<div class="col-sm-9">
+										<input type="text" autocomplete="off" id="librarypwd" value="{$info.librarypwd}" name="librarypwd" class="form-control" placeholder="请输入数据库密码">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">微擎公众号id：</label>
+									<div class="col-sm-9">
+										<input type="text" autocomplete="off" id="uniacid" value="{$info.uniacid}" name="uniacid" class="form-control" placeholder="请输入微擎公众号id">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">平台idid：</label>
+									<div class="col-sm-9">
+										<input type="text" autocomplete="off" id="wxappid" value="{$info.wxappid}" name="wxappid" class="form-control" placeholder="请输入平台id">
+									</div>
+								</div>
+								<!-- form end -->
+							</div>
+						</div>
+
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-7">
+					<button type="button" class="btn btn-primary" onclick="gengxin()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;数据同步
+					</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js?t=1498856285724" charset="utf-8"></script>
+<script>
+	function gengxin(){
+
+            var ii = layer.load();
+            //此处用setTimeout演示ajax的回调
+            // setTimeout(function(){
+            //     layer.close(ii);
+            // }, 1000);
+		var urladdress = $('input[name="urladdress"]').val();
+		var username = $('input[name="username"]').val();
+		var libraryname = $('input[name="libraryname"]').val();
+		var librarypwd = $('input[name="librarypwd"]').val();
+		var uniacid = $('input[name="uniacid"]').val();
+		var wxappid = $('input[name="wxappid"]').val();
+        $.ajax({
+            type:'post',
+            url: "{:url('gcadmin/Synchronization/index')}",
+            dataType: 'json',
+            data: 'type=1&urladdress='+ urladdress +'&username='+ username +'&libraryname='+ libraryname +'&librarypwd='+ librarypwd +'&uniacid='+ uniacid + '&wxappid='+ wxappid,
+            error: function(XMLHttpRequest, status, thrownError) {
+                layer.msg('网络繁忙，请恢复备份跳转php延迟参数重新同步数据');
+                layer.close(ii);
+                return false;
+            },
+            success: function(msg) {
+                console.log(msg)
+                layer.close(ii);
+                if(msg.code == 1) {
+                    layer.msg(msg.msg);
+                }else {
+                    layer.msg(msg.msg);
+				}
+            }
+        });
+
+	}
+
+</script>
+
+
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

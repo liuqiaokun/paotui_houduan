@@ -1,0 +1,498 @@
+{extend name='common/_container2'}
+{block name="content"}
+<style>
+
+    .ibox-content {
+        background-color: #ffffff;
+        color: inherit;
+        padding: 15px 20px 20px 20px;
+        border-color: #e7eaec;
+        -webkit-border-image: none;
+        -o-border-image: none;
+        border-image: none;
+        border-style: solid solid none;
+        border-width: 1px 0px;
+    }
+
+    .portal-block-container {
+        font-size: 14px;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+
+    .portal-block-container .portal-block-item {
+        color: #fff;
+        padding: 15px 25px;
+        position: relative;
+        line-height: 3em;
+        border-radius: 5px;
+        box-shadow: 0 2px 3px 0 rgb(0 0 0 / 20%);
+    }
+
+    .textnew {
+        font-size: 46px;
+        line-height: 46px;
+    }
+
+    .yunying {
+        font-size: 18px;
+        line-height: 80px;
+        font-weight: bold;
+        height: 30px;
+        display: flex;
+        /*justify-content: center;*/
+        align-items: center;
+        /*border-bottom: 1px solid #dddddd;*/
+        /*opacity:0.4;*/
+    }
+
+    .yunshou {
+        /*background-color: #0C0C0C;*/
+        width: 100%;
+        height: 100%;
+    }
+
+    .shou {
+        background-color:  #FFFFFF;
+        width: 100%;
+        height: 47%;
+        margin-top: 2%;
+        padding: 15px;
+        border-radius: 5px;
+        /*border: 1px solid #dddddd;*/
+    }
+
+    .ru {
+        display: flex;
+        height: 30px;
+        align-items: center;
+        /*margin-left: 30px;*/
+    }
+
+    .yunimg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .conts {
+        padding: 15px;
+        /*background-color: #0C0C0C;*/
+        height: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .conone {
+        width: 30%;
+        height: 100%;
+        /*background-color: #0C0C0C;*/
+    }
+
+    .contitle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50%;
+        font-size: 22px;
+        line-height: 80px;
+        font-weight: 700;
+        font-family: DIN;
+    }
+
+    .ranking {
+        /*border-bottom: 1px solid #dddddd;*/
+        width: 100%;
+        height: 50px;
+        display: flex;
+    }
+
+    .column {
+        width: 25%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+<div class="container-fluid" style="padding: 0 !important;">
+    <div class="row" style="display: none">
+        <div class="col-sm-12">
+            <div class="alert alert-success alert-dismissable">
+                <button aria-hidden="true" data-dismiss="alert" class="close"
+                        type="button">×
+                </button>
+                {:session('accounts.username')}，欢迎使用{:config('xhadmin.sub_site_title')}
+            </div>
+        </div>
+    </div>
+
+    <div class="think-box-shadow portal-block-container notselect">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="portal-block-item nowrap" style="background:linear-gradient(-125deg,#57bdbf,#2f9de2)">
+                    <div>总学校</div>
+                    <div class="textnew">{$data.school}</div>
+                    <div>今日新增 + {$data.todayschool}</div>
+                </div><!--<i class="portal-block-icon layui-icon layui-icon-app"></i>--></div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="portal-block-item nowrap" style="background:linear-gradient(-125deg,#ff7d7d,#fb2c95)">
+                    <div>总用户</div>
+                    <div class="textnew">{$data.userTotal}</div>
+                    <div>今日新增 + {$data.todayuser}</div>
+                </div><!--<i class="portal-block-icon layui-icon layui-icon-user"></i>--></div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="portal-block-item nowrap" style="background:linear-gradient(-113deg,#c543d8,#925cc3)">
+                    <div>总骑手</div>
+                    <div class="textnew">{$data.run_status}</div>
+                    <div>今日新增 + {$data.todayrun_status}</div>
+                </div><!--<i class="portal-block-icon layui-icon layui-icon-form"></i>--></div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="portal-block-item nowrap" style="background:linear-gradient(-141deg,#ecca1b,#f39526)">
+                    <div>总店铺</div>
+                    <div class="textnew">{$data.business}</div>
+                    <div>今日新增 + {$data.todaybusiness}</div>
+                </div><!--<i class="portal-block-icon layui-icon layui-icon-rmb"></i>--></div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15 margin-top-10">
+
+        <div class="layui-col-xs12 layui-col-md6" style="padding: 15px;">
+            <div class="think-box-shadow">
+                <div id="main2" style="width:100%;height:392px">
+                    <div class="yunying">运营概况</div>
+                    <div class="yunshou">
+                        <div class="shou">
+                            <div class="ru">
+                                <img src="https://<?php echo $_SERVER['HTTP_HOST'] ?>/wximages/pay.png" class="yunimg">&nbsp;&nbsp; 运营收入
+                            </div>
+                            <div class="conts">
+                                <div class="conone">
+                                    <div class="contitle">{$data.orderpay.pay}</div>
+                                    <div class="contitle" style=" font-weight: 500;font-size: 18px;">总收益额</div>
+                                </div>
+                                <div class="conone">
+                                    <div class="contitle">{$data.orderpay.todaypay}</div>
+                                    <div class="contitle" style=" font-weight: 500;font-size: 18px;">今天收益</div>
+                                </div>
+                                <div class="conone">
+                                    <div class="contitle">{$data.orderpay.weekpay}</div>
+                                    <div class="contitle" style=" font-weight: 500;font-size: 18px;">本周收益</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="shou">
+                            <div class="ru">
+                                <img src="https://<?php echo $_SERVER['HTTP_HOST'] ?>/wximages/order.png" class="yunimg">&nbsp;&nbsp; 订单统计
+                            </div>
+                            <div class="conts">
+                                <div class="conone">
+                                    <div class="contitle">{$data.order}</div>
+                                    <div class="contitle" style=" font-weight: 500;font-size: 18px;">总订单数量</div>
+                                </div>
+                                <div class="conone">
+                                    <div class="contitle">{$data.todayorder}</div>
+                                    <div class="contitle" style=" font-weight: 500;font-size: 18px;">今日订单数量</div>
+                                </div>
+                                <div class="conone">
+                                    <div class="contitle">{$data.weekorder}</div>
+                                    <div class="contitle" style=" font-weight: 500;font-size: 18px;">本周订单数量</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <div class="layui-col-xs12 layui-col-md6" style="padding: 15px;">
+            <div class="think-box-shadow">
+                <div id="main4" style="width:100%;height:350px;">
+                    <div class="yunying">赏金榜 Top10</div>
+                    <div class="ru" style="height: 15%;margin-top: 2%;background-color:  #FFFFFF;border-top-left-radius:5px;border-top-right-radius:5px;">
+
+                        &nbsp;&nbsp;学校：<select class="form-control" id="schoolid" style="width: 90%" onchange="schoolss()" >&nbsp;&nbsp;
+                        <option class="layui-menu-body-title" value="">请选择</option>
+                        {volist name="data.schooldata" id="ovs" }
+                        <option class="layui-menu-body-title" value="{$ovs.s_id}">{$ovs.s_name}</option>
+                        {/volist}
+                    </select>
+                    </div>
+                    <div style="padding: 15px;background-color: #ffffff;">
+                    <div class="ranking" style="background-color:  #F3F3F4;">
+                        <div class="column">
+                            排名
+                        </div>
+                        <div class="column">
+                            骑手昵称
+                        </div>
+                        <div class="column">
+                            性别
+                        </div>
+                        <div class="column">
+                            赚取赏金
+                        </div>
+                    </div>
+                    </div>
+                    <div id="places" style="padding: 0 15px;width: 100%;max-height:250px;overflow-y: scroll;background-color:  #FFFFFF;border-bottom-right-radius:5px;border-bottom-left-radius:5px;">
+                    {volist name="data.log" id="vo" }
+                    <div class="ranking">
+                        <div class="column">
+                            {$vo.number}
+                        </div>
+                        <div class="column">
+                            {$vo.nickname}
+                        </div>
+                        <div class="column">
+                            {if $vo['t_sex'] == 1}
+                            男
+                            {elseif  $vo['t_sex'] == 2}
+                            女
+                            {else /}
+                            未知
+                            {/if}
+                        </div>
+                        <div class="column">
+                            {$vo.price}
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-xs12" style="margin-top: 5%; border-radius: 5px;border: 1px solid #dddddd;background-color: #ffffff;">
+
+        <div class="think-box-shadow">
+            <div class="ru" style="padding-left: 5%;margin-top: 1.5%;">
+                 分校收益统计
+            </div>
+            <div id="container" style="width:100%;height:350px;"></div>
+        </div>
+    </div>
+
+
+</div>
+</div>
+<script type="text/javascript" >
+    function schoolss() {
+        var schoolid = document.getElementById('schoolid').value;
+        var places = document.getElementById('places');
+        $.ajax({
+            url: '{:url("accounts/index/schooleid")}',
+            type: "GET",
+            data: {"sid":schoolid},
+            dataType: "json",
+            //success 会在成功接收到返回数据后触发
+            success:function (re) {
+                var data = re;
+                    var datas = data
+                    var html = "";
+                    for (var i = 0; i < datas.length; i++) {
+                        var resutl = datas[i];
+                        html += " <div class='ranking'>";
+                        html += " <div class='column'>"+ resutl.number +"</div>";
+                        html += " <div class='column'>"+ resutl.nickname +"</div>";
+                        html += " <div class='column'>"+ resutl.t_sex +"</div>";
+                        html += " <div class='column'>"+ resutl.price +"</div>";
+                        html += " </div>";
+                    }
+                    places.innerHTML = html;
+            }
+        });
+        console.log(schoolid, '---');
+    }
+</script>
+<script type="text/javascript" src="https://<?php echo $_SERVER['HTTP_HOST'] ?>/wximages/echarts.min.js"></script>
+<script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+
+    const posList = [
+        'left',
+        'right',
+        'top',
+        'bottom',
+        'inside',
+        'insideTop',
+        'insideLeft',
+        'insideRight',
+        'insideBottom',
+        'insideTopLeft',
+        'insideTopRight',
+        'insideBottomLeft',
+        'insideBottomRight'
+    ];
+    app.configParameters = {
+        rotate: {
+            min: -90,
+            max: 90
+        },
+        align: {
+            options: {
+                left: 'left',
+                center: 'center',
+                right: 'right'
+            }
+        },
+        verticalAlign: {
+            options: {
+                top: 'top',
+                middle: 'middle',
+                bottom: 'bottom'
+            }
+        },
+        position: {
+            options: posList.reduce(function (map, pos) {
+                map[pos] = pos;
+                return map;
+            }, {})
+        },
+        distance: {
+            min: 0,
+            max: 100
+        }
+    };
+    app.config = {
+        rotate: 90,
+        align: 'left',
+        verticalAlign: 'middle',
+        position: 'insideBottom',
+        distance: 15,
+        onChange: function () {
+            const labelOption = {
+                rotate: app.config.rotate,
+                align: app.config.align,
+                verticalAlign: app.config.verticalAlign,
+                position: app.config.position,
+                distance: app.config.distance
+            };
+            myChart.setOption({
+                series: [
+                    {
+                        label: labelOption
+                    },
+                    {
+                        label: labelOption
+                    },
+                    {
+                        label: labelOption
+                    },
+                    {
+                        label: labelOption
+                    }
+                ]
+            });
+        }
+    };
+    const labelOption = {
+        show: true,
+        position: app.config.position,
+        distance: app.config.distance,
+        align: app.config.align,
+        verticalAlign: app.config.verticalAlign,
+        rotate: app.config.rotate,
+        formatter: '{c}  {name|{a}}',
+        fontSize: 16,
+        rich: {
+            name: {}
+        }
+    };
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['今日', '本周', '本月']
+        },
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            // feature: {
+            //     mark: { show: true },
+            //     dataView: { show: true, readOnly: false },
+            //     magicType: { show: true, type: ['line', 'bar', 'stack'] },
+            //     restore: { show: true },
+            //     saveAsImage: { show: true }
+            // }
+        },
+        xAxis: [
+            {
+                type: 'category',
+                axisTick: { show: false },
+                data: [
+                    {volist name="data.schoolpay" id="vvo" }
+                    '{$vvo.s_name}',
+                    {/volist}
+                ] // 学校
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '今日', // 今日
+                type: 'bar',
+                barGap: 0,
+                // label: labelOption,
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [
+                    {volist name="data.schoolpay" id="voo" }
+                    {$voo.todaypay},
+                    {/volist}
+                ] // 所有今日的数据
+            },
+            {
+                name: '本周',  // 本周
+                type: 'bar',
+                // label: labelOption,
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [
+                    {volist name="data.schoolpay" id="vso" }
+                    {$vso.weekpay},
+                    {/volist}
+                ] // 所有本周的数据
+            },
+            {
+                name: '本月', //本月所有本月
+                type: 'bar',
+                // label: labelOption,
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [
+                    {volist name="data.schoolpay" id="ov" }
+                    {$ov.pay},
+                    {/volist}
+                ] //本月所有本月
+            }
+        ]
+    };
+
+    if (option && typeof option === 'object') {
+        myChart.setOption(option);
+    }
+    window.addEventListener('resize', myChart.resize);
+</script>
+
+{/block}

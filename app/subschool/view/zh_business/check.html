@@ -1,0 +1,172 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='business_id' id='business_id' value="{$info.business_id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家营业开始时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="start_time" value="{$info.start_time}" name="start_time" class="form-control" placeholder="请输入商家营业开始时间">
+							<span class="help-block m-b-none">请输入营业开始时间。例: 08:30（冒号为英文冒号）</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家打烊时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="end_time" value="{$info.end_time}" name="end_time" class="form-control" placeholder="请输入商家打烊时间">
+							<span class="help-block m-b-none">请输入打烊时间。例：20:30（冒号为英文冒号）</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="business_name" value="{$info.business_name}" name="business_name" class="form-control" placeholder="请输入商家名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家地址：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="business_address" value="{$info.business_address}" name="business_address" class="form-control" placeholder="请输入商家地址">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家电话：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="phone" value="{$info.phone}" name="phone" class="form-control" placeholder="请输入商家电话">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家图片：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="business_image" value="{$info.business_image}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="business_image" class="form-control" placeholder="请输入商家图片">
+							<span class="help-block m-b-none business_image_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="business_image_upload"></span>
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">审核状态：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['check_status'])){ $info['check_status'] = '2'; }; ?>
+							<input name="check_status" value="0" type="radio" {if condition="$info.check_status eq '0'"}checked{/if} title="未支付">
+							<input name="check_status" value="1" type="radio" {if condition="$info.check_status eq '1'"}checked{/if} title="审核中">
+							<input name="check_status" value="2" type="radio" {if condition="$info.check_status eq '2'"}checked{/if} title="已通过">
+							<input name="check_status" value="3" type="radio" {if condition="$info.check_status eq '3'"}checked{/if} title="已拒绝">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">资质：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="license" value="{$info.license}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="license" class="form-control" placeholder="请输入资质">
+							<span class="help-block m-b-none license_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="license_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">配送费：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="delivery_fee" value="{$info.delivery_fee}" name="delivery_fee" class="form-control" placeholder="请输入配送费">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.check()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+uploader('business_image_upload','business_image','image',false,'','{:getUploadServerUrl()}');
+uploader('license_upload','license','image',false,'','{:getUploadServerUrl()}');
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+		business_name: {
+			validators: {
+				notEmpty: {
+					message: '商家名称不能为空'
+	 			},
+	 		}
+	 	},
+		business_address: {
+			validators: {
+				notEmpty: {
+					message: '商家地址不能为空'
+	 			},
+	 		}
+	 	},
+		phone: {
+			validators: {
+				regexp: {
+					regexp: /^1[3456789]\d{9}$/,
+					message: '手机号有误'
+	 			},
+	 		}
+	 	},
+		business_image: {
+			validators: {
+				notEmpty: {
+					message: '商家图片不能为空'
+	 			},
+	 		}
+	 	},
+		delivery_fee: {
+			validators: {
+				regexp: {
+					regexp: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+					message: ''
+	 			},
+	 		}
+	 	},
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('business_id').set('start_time').set('end_time').set('business_name').set('business_address').set('phone').set('business_image').set('license').set('delivery_fee');
+};
+
+CodeInfoDlg.check = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var check_status = $("input[name = 'check_status']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/ZhBusiness/check", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('check_status',check_status);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

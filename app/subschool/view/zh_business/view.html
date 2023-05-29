@@ -1,0 +1,127 @@
+{extend name='common/_container'} 
+{block name="content"} 
+<div class="ibox float-e-margins"> 
+	<div class="ibox-content"> 
+		<table class="table table-bordered" style="word-break:break-all;"> 
+			<tbody> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">微信管理员：</td> 
+					<td>{$info.wxadmin_name}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">排序：</td> 
+					<td>{$info.sort}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商家分类：</td> 
+					<td>{$info.type_id}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商家营业开始时间：</td> 
+					<td>{$info.start_time}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商家打烊时间：</td> 
+					<td>{$info.end_time}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商家名称：</td> 
+					<td>{$info.business_name}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商家地址：</td> 
+					<td>{$info.business_address}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商家电话：</td> 
+					<td>{$info.phone}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">到期时间：</td> 
+					<td>{if $info.expire_time}{$info.expire_time|date='Y-m-d H:i:s'}{/if}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商家图片：</td> 
+					<td><a href="javascript:void(0)"  onclick="openImg('{$info.business_image}')"><img height="75" src="{$info.business_image}"></a></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">营业状态：</td> 
+					<td><?php echo getFieldVal($info["status"],"营业|1|success,打烊|2|warning");?></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">商家类型：</td> 
+					<td><?php echo getFieldVal($info["type"],"校内|1|success,校外|2|warning");?></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">首页推荐：</td> 
+					<td><?php echo getFieldVal($info["is_recommend"],"开启|1,关闭|0");?></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">起步费：</td> 
+					<td>{$info.starting_fee}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">经度：</td> 
+					<td>{$info.longitude}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">纬度：</td> 
+					<td>{$info.latitude}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">打印机编号(SN)：</td> 
+					<td>{$info.printer}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">打印机后台注册账号(USER)：</td> 
+					<td>{$info.printer_user}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">打印机后台账号的UKEY：</td> 
+					<td>{$info.printer_ukey}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">金豆余额：</td> 
+					<td>{$info.balance}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">虚拟销量：</td> 
+					<td>{$info.virtual_sale}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">服务费：</td> 
+					<td>{$info.service_price}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">餐盒费：</td> 
+					<td>{$info.box_fee}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">资质：</td> 
+					<td><a href="javascript:void(0)"  onclick="openImg('{$info.license}')"><img height="75" src="{$info.license}"></a></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">创建时间：</td> 
+					<td>{if $info.createtime}{$info.createtime|date='Y-m-d H:i:s'}{/if}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">配送费：</td> 
+					<td>{$info.delivery_fee}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">平台抽成：</td> 
+					<td>{$info.store_money}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">分校抽成：</td> 
+					<td>{$info.fx_store_money}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">是否是宿舍小店：</td> 
+					<td><?php echo getFieldVal($info["is_dormitory_store"],"是|1,否|0");?></td>   
+				</tr> 
+			</tbody> 
+		</table> 
+	</div> 
+</div> 
+{/block} 

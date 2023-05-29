@@ -1,0 +1,147 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='class_id' id='class_id' value="{$info.class_id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">排序：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="sort" value="{$info.sort}" name="sort" class="form-control" placeholder="请输入排序">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">分类名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="class_name" value="{$info.class_name}" name="class_name" class="form-control" placeholder="请输入分类名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">图标：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="icon" value="{$info.icon}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="icon" class="form-control" placeholder="请输入图标">
+							<span class="help-block m-b-none icon_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="icon_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">图片：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="img" value="{$info.img}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="img" class="form-control" placeholder="请输入图片">
+							<span class="help-block m-b-none img_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="img_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">创建时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" value="{if condition="$info.createtime neq ''"}{$info.createtime|date='Y-m-d H:i:s'}{/if}" name="createtime"  placeholder="请输入创建时间" class="form-control" id="createtime">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">首页推荐：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_recommend'])){ $info['is_recommend'] = 1; }; ?>
+							<input name="is_recommend" value="1" type="radio" {if condition="$info.is_recommend eq '1'"}checked{/if} title="开启">
+							<input name="is_recommend" value="0" type="radio" {if condition="$info.is_recommend eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">跳转链接：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="url" value="{$info.url}" name="url" class="form-control" placeholder="请输入跳转链接">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">是否是分类：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_cate'])){ $info['is_cate'] = 1; }; ?>
+							<input name="is_cate" value="1" type="radio" {if condition="$info.is_cate eq '1'"}checked{/if} title="开启">
+							<input name="is_cate" value="0" type="radio" {if condition="$info.is_cate eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">是否认证可看：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_auth_watch'])){ $info['is_auth_watch'] = 0; }; ?>
+							<input name="is_auth_watch" value="1" type="radio" {if condition="$info.is_auth_watch eq '1'"}checked{/if} title="开启">
+							<input name="is_auth_watch" value="0" type="radio" {if condition="$info.is_auth_watch eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+uploader('icon_upload','icon','image',false,'','{:getUploadServerUrl()}');
+uploader('img_upload','img','image',false,'','{:getUploadServerUrl()}');
+laydate.render({elem: '#createtime',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+		class_name: {
+			validators: {
+				notEmpty: {
+					message: '分类名称不能为空'
+	 			},
+	 		}
+	 	},
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('class_id').set('sort').set('class_name').set('icon').set('img').set('createtime').set('url');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var is_recommend = $("input[name = 'is_recommend']:checked").val();
+	 var is_cate = $("input[name = 'is_cate']:checked").val();
+	 var is_auth_watch = $("input[name = 'is_auth_watch']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/ZhForumClass/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('is_recommend',is_recommend);
+	 ajax.set('is_cate',is_cate);
+	 ajax.set('is_auth_watch',is_auth_watch);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

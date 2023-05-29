@@ -1,0 +1,117 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='s_id' id='s_id' value="{$info.s_id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">是否开启分销：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_distribution'])){ $info['is_distribution'] = 1; }; ?>
+							<input name="is_distribution" value="1" type="radio" {if condition="$info.is_distribution eq '1'"}checked{/if} title="开启">
+							<input name="is_distribution" value="0" type="radio" {if condition="$info.is_distribution eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">一级分销比例：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="level1" value="{$info.level1}" name="level1" class="form-control" placeholder="请输入一级分销比例">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">二级分销比例：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="level2" value="{$info.level2}" name="level2" class="form-control" placeholder="请输入二级分销比例">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">享受分佣项目：</label>
+						<div class="col-sm-9">
+								<input name="project" value="1" type="checkbox" {if in_array(1,explode(',',$info['project']))}checked{/if} title="全部">
+								<input name="project" value="2" type="checkbox" {if in_array(2,explode(',',$info['project']))}checked{/if} title="跑腿订单">
+								<input name="project" value="3" type="checkbox" {if in_array(3,explode(',',$info['project']))}checked{/if} title="二手市场">
+								<input name="project" value="4" type="checkbox" {if in_array(4,explode(',',$info['project']))}checked{/if} title="圈子打赏">
+								<input name="project" value="5" type="checkbox" {if in_array(5,explode(',',$info['project']))}checked{/if} title="圈子置顶">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.updateProject()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+		level1: {
+			validators: {
+				regexp: {
+					regexp: /^([1-9]\d|\d)$/,
+					message: '请输入整数'
+	 			},
+	 		}
+	 	},
+		level2: {
+			validators: {
+				regexp: {
+					regexp: /^([1-9]\d|\d)$/,
+					message: '请输入整数'
+	 			},
+	 		}
+	 	},
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('s_id').set('level1').set('level2');
+};
+
+CodeInfoDlg.updateProject = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var is_distribution = $("input[name = 'is_distribution']:checked").val();
+	 var project = '';
+	 $('input[name="project"]:checked').each(function(){ 
+	 	project += ',' + $(this).val(); 
+	 }); 
+	  project = project.substr(1); 
+	 var ajax = new $ax(Feng.ctxPath + "/School/updateProject", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('is_distribution',is_distribution);
+	 ajax.set('project',project);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

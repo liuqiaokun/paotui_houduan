@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable = 0" />
+    <title>小程序跳转测试</title>
+    <script src="__PUBLIC__/static/js/jquery.min.js?v=2.1.4"></script>
+</head>
+<body style="text-aligin:center;">
+<div class=“test-position”><div>2323</div>
+    <!-- username="gh_a0*********"    gh_8f******** 这里填写小程序的原始ID -->
+    <wx-open-launch-weapp id="launch-btn" username="gh_a9afef163bff"  path="gc_school/pages/home/index">
+        <!-- /pages/index/index.html这里填写跳转对于小程序的页面 注意这里的 .html -->
+        <!-- pages/home/index.html?user=123&action=abc这里填写跳转对于小程序的页面 注意这里的 .html -->
+
+        <template>
+            <style>
+                .btn {
+                    padding: 12px;
+                    width: 200px;
+                    height: 50px;
+                }
+            </style>
+            <button class="btn">打开</button>
+        </template>
+
+    </wx-open-launch-weapp>
+    <div class="jump">跳转</div>
+</div>
+
+<!--
+<script src="/js/jquery-1.12.4.js"></script>-->
+
+
+<script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script> <!-- 至少必须是1.6版本 -->
+
+<script>
+
+    $(".jump").click(function () {
+        wx.miniProgram.navigateTo({
+            url: '/gc_school/pages/user/index?id=ttl'
+        })
+    })
+    
+    $(function () {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            //ios的ua中无miniProgram，但都有MicroMessenger（表示是微信浏览器）
+            wx.miniProgram.getEnv((res) => {
+                console.log("打印",res)
+                if (res.miniprogram) {
+                    console.log("在小程序里", res);
+                } else {
+                    console.log("不在小程序里", res);
+                }
+            })
+        } else {
+            console.log('不在微信里');
+        }
+
+        // console.log(111)
+        // config 的参数以及签名=
+        var url = location.href.split('#')[0];
+        console.log(url)
+        $.post("https://test.fkynet.net/api/Mplogin/actionSqrcode", function(response){
+            // console.log(response);
+            var obj = response
+            // var obj = eval("(" + response + ")");
+            // console.log( obj.status);
+
+            if(obj.status == 0) {
+                var info = obj.data;
+                console.log(info);
+                wx.config({
+                    debug: false,
+                    appId: info.appId,
+                    timestamp: info.timestamp,
+                    nonceStr: info.nonceStr,
+                    signature: info.signature,
+                    jsApiList: ["startRecord", "stopRecord", "playVoice", "pauseVoice", "stopVoice",  "uploadVoice", "downloadVoice", 'chooseImage',  "uploadImage", "downloadImage", "translateVoice",  "openLocation", "getLocation", 'previewImage'],//必须要不调用小程序标签渲染不出来"startRecord", "stopRecord", "playVoice", "pauseVoice", "stopVoice",  "uploadVoice", "downloadVoice", 'chooseImage',  "uploadImage", "downloadImage", "translateVoice",  "openLocation", "getLocation", 'previewImage'
+                    openTagList: ['wx-open-launch-weapp']//必须必须要不调用小程序标签渲染不出来'wx-open-launch-weapp'
+                });
+                //=== 获取 config 的参数以及签名=== end
+                wx.ready(function () {
+                    //alert('werwre');
+                    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中
+                    console.log("执行readyres111");
+                });
+
+                wx.error(function (res) {
+                    //alert('sf2323');
+                    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中
+                    console.log("报错res", res);
+                });
+                var btn = document.getElementById('launch-btn');
+                btn.addEventListener('launch', function (e) {
+                    console.log('success');
+                });
+                btn.addEventListener('error', function (e) {
+                    console.log('fail', e.detail);
+                });
+                btn.addEventListener('WeixinOpenTagsError', function (e) {
+                    console.error(e.detail.errMsg); // 无法使用开放标签的错误原因，需回退兼容。仅无法使用开发标签，JS-SDK其他功能不受影响
+                });
+            }
+        });
+
+
+
+
+
+    });
+
+
+</script>
+</body>
+</html>

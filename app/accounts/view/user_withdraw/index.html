@@ -1,0 +1,232 @@
+{extend name='common/_container'} {block name="content"}
+<div class="row">
+	<div class="col-sm-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content"> 
+				<div class="row row-lg"> 
+					<div class="col-sm-12"> 
+						<div class="row" id="searchGroup">
+							<div class="col-sm-2">
+								<div class="input-group">
+									<div class="input-group-btn">
+										<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">提现账号</button>
+									</div>
+									<input type="text" autocomplete="off" class="form-control" id="account" placeholder="提现账号" />
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="input-group">
+									<div class="input-group-btn">
+										<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">微信昵称</button>
+									</div>
+									<select class="form-control" id="u_id">
+										<option value="">请选择</option>
+										{volist name="user" id="vo"}
+										<option value="{$vo.u_id}">{$vo.nickname}</option>
+										{/volist}
+									</select>
+								</div>
+							</div>
+							<!--<div class="col-sm-2">-->
+								<!--<div class="input-group">-->
+									<!--<div class="input-group-btn">-->
+										<!--<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">提现姓名</button>-->
+									<!--</div>-->
+									<!--<input type="text" autocomplete="off" class="form-control" id="name_s" placeholder="提现姓名" />-->
+								<!--</div>-->
+							<!--</div>-->
+							<div class="col-sm-2">
+								<div class="input-group">
+									<div class="input-group-btn">
+										<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">提现类型</button>
+									</div>
+									<select class="form-control" id="type">
+										<option value="">请选择</option>
+										<option value="1">支付宝</option>
+										<option value="2">企业付款</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="input-group">
+									<div class="input-group-btn">
+										<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">状态</button>
+									</div>
+									<select class="form-control" id="status">
+										<option value="">请选择</option>
+										<option value="1">待审核</option>
+										<option value="2">审核通过</option>
+										<option value="3">审核拒绝</option>
+										<option value="4">商家处理中</option>
+									</select>
+								</div>
+							</div>
+							<!-- search end -->
+							<div class="col-sm-1">
+								<button type="button" class="btn btn-success " onclick="CodeGoods.search()" id="">
+									<i class="fa fa-search"></i>&nbsp;搜索
+								</button>
+							</div>
+						</div>
+						<div class="btn-group-sm" id="CodeGoodsTableToolbar" role="group">
+						{if condition="in_array('accounts/UserWithdraw/update',session('accounts.nodes')) || session('accounts.role_id') eq 1"}
+						<button type="button" id="update" class="btn btn-success button-margin" onclick="CodeGoods.update()">
+						<i class="fa fa-pencil"></i>&nbsp;修改
+						</button>
+						{/if}
+						</div>
+						<table id="CodeGoodsTable" data-mobile-responsive="true" data-click-to-select="true">
+							<thead><tr><th data-field="selectItem" data-checkbox="true"></th></tr></thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	var CodeGoods = {id: "CodeGoodsTable",seItem: null,table: null,layerIndex: -1};
+
+	CodeGoods.initColumn = function () {
+ 		return [
+ 			{field: 'selectItem', checkbox: true},
+ 			{title: '编号', field: 'id', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '微信昵称', field: 'nickname', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '提现账号', field: 'account', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '提现姓名', field: 'name', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '提现金额', field: 'price', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '提现类型', field: 'type', visible: true, align: 'center', valign: 'middle',sortable: true,formatter:CodeGoods.typeFormatter},
+ 			{title: '状态', field: 'status', visible: true, align: 'center', valign: 'middle',sortable: true,formatter:CodeGoods.statusFormatter},
+ 			{title: '商家提现', field: 'is_store', visible: true, align: 'center', valign: 'middle',sortable: true,formatter:CodeGoods.storeFormatter},
+            {title: '微信批次单号/业务单号', field: 'batch_id', visible: true, align: 'center', valign: 'middle',sortable: true},
+            {title: '微信付款单号', field: 'payment_no', visible: true, align: 'center', valign: 'middle',sortable: true},
+			{title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle',sortable: true,formatter:CodeGoods.create_timeFormatter},
+ 			{title: '操作', field: '', visible: true, align: 'center', valign: 'middle',formatter: 'CodeGoods.buttonFormatter'},
+ 		];
+ 	};
+
+	CodeGoods.buttonFormatter = function(value,row,index) {
+		if(row.id){
+			var str= '';
+			if(row.status==1)
+			{
+                {if condition="in_array('accounts/UserWithdraw/update',session('accounts.nodes')) || session('accounts.role_id') eq 1"}
+                str += '<button type="button" class="btn btn-success btn-xs" title="修改"  onclick="CodeGoods.update('+row.id+')"><i class="fa fa-pencil"></i>&nbsp;修改</button>&nbsp;';
+                {/if}
+			}
+			return str;
+		}
+	}
+
+	CodeGoods.typeFormatter = function(value,row,index) {
+		if(value !== null){
+			var value = value.toString();
+			switch(value){
+				case '1':
+					return '支付宝';
+				break;
+				case '2':
+					return '企业付款';
+				break;
+			}
+		}
+	}
+
+	CodeGoods.statusFormatter = function(value,row,index) {
+		if(value !== null){
+			var value = value.toString();
+			switch(value){
+				case '1':
+					return '<span class="label label-primary">待审核</span>';
+				break;
+				case '2':
+					return '<span class="label label-success">审核通过</span>';
+				break;
+				case '3':
+					return '<span class="label label-danger">审核拒绝</span>';
+				break;
+                case '4':
+                    return '<span class="label label-warning">商家处理中</span>';
+                    break;
+			}
+		}
+	}
+
+	CodeGoods.storeFormatter = function(value,row,index) {
+		if(value !== null){
+			var value = value.toString();
+			switch(value){
+
+				case '1':
+					return '<span class="label label-success">是</span>';
+					break;
+			}
+		}
+	}
+
+	CodeGoods.create_timeFormatter = function(value,row,index) {
+		if(value){
+			return formatDateTime(value,'Y-m-d H:i:s');	
+		}
+	}
+
+	CodeGoods.formParams = function() {
+		var queryData = {};
+		queryData['offset'] = 0;
+		queryData['wxapp_id'] = $("#wxapp_id").val();
+		queryData['account'] = $("#account").val();
+		queryData['name_s'] = $("#name_s").val();
+		queryData['type'] = $("#type").val();
+		queryData['status'] = $("#status").val();
+		queryData['u_id'] = $("#u_id").val();
+		return queryData;
+	}
+
+	CodeGoods.check = function () {
+		var selected = $('#' + this.id).bootstrapTable('getSelections');
+		if(selected.length == 0){
+			Feng.info("请先选中表格中的某一记录！");
+			return false;
+		}else{
+			CodeGoods.seItem = selected;
+			return true;
+		}
+	};
+
+	CodeGoods.update = function (value) {
+		if(value){
+			var index = layer.open({type: 2,title: '修改',area: ['600px', '350px'],fix: false, maxmin: true,content: Feng.ctxPath + '/UserWithdraw/update?id='+value});
+			if(!IsPC()){layer.full(index)}
+		}else{
+			if (this.check()) {
+				var idx = '';
+				$.each(CodeGoods.seItem, function() {
+					idx += ',' + this.id;
+				});
+				idx = idx.substr(1);
+				if(idx.indexOf(",") !== -1){
+					Feng.info("请选择单条数据！");
+					return false;
+				}
+				var index = layer.open({type: 2,title: '修改',area: ['600px', '350px'],fix: false, maxmin: true,content: Feng.ctxPath + '/UserWithdraw/update?id='+idx});
+				this.layerIndex = index;
+				if(!IsPC()){layer.full(index)}
+			}
+		}
+	}
+
+
+	CodeGoods.search = function() {
+		CodeGoods.table.refresh({query : CodeGoods.formParams()});
+	};
+
+	$(function() {
+		var defaultColunms = CodeGoods.initColumn();
+		var url = location.search;
+		var table = new BSTable(CodeGoods.id, Feng.ctxPath+"/UserWithdraw/index"+url,defaultColunms,20);
+		table.setPaginationType("server");
+		table.setQueryParams(CodeGoods.formParams());
+		CodeGoods.table = table.init();
+	});
+</script>
+{/block}

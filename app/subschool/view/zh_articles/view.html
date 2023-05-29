@@ -1,0 +1,70 @@
+{extend name='common/_container'} 
+{block name="content"} 
+<div class="ibox float-e-margins"> 
+	<div class="ibox-content"> 
+		<table class="table table-bordered" style="word-break:break-all;"> 
+			<tbody> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">所属分类：</td>
+					<td>{$info.class_name}</td>   
+				</tr>
+				<tr>
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">用户昵称：</td>
+					<td>{$info.user.nickname}</td>
+				</tr>
+				<tr>
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">用户头像：</td>
+					<td><a href="javascript:void(0)"  onclick="openImg('{$info.user.avatar}')"><img height="75" src="{$info.user.avatar}"></a></td>
+				</tr>
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">内容：</td> 
+					<td>{$info.content}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">媒体类型：</td> 
+					<td><?php echo getFieldVal($info["media_type"],"视频|1|success,图片|2|warning");?></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">状态：</td> 
+					<td><?php echo getFieldVal($info["status"],"通过|1|success,拒绝|2|warning,待审核|0|info");?></td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">创建时间：</td> 
+					<td>{if $info.createtime}{$info.createtime|date='Y-m-d H:i:s'}{/if}</td>   
+				</tr>
+				{if $info["media_type"] == '2'}
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">图片：</td>
+					<td>
+					    {foreach $info['image'] as $key=>$vo }
+    					<a href="javascript:void(0)"  onclick="openImg('{$vo}')"><img height="75" src="{$vo}"></a>
+    					{/foreach}
+					</td>
+				</tr>
+				{elseif $info["media_type"] == '1' /}
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">视频：</td> 
+					<td><video src="{$info.video}" style="height:200px !important;" height="200" width="" preload="none" autoplay="autoplay"></video></td>   
+				</tr>
+				{/if}
+				<!--<tr> -->
+					<!--<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">是否匿名：</td> -->
+					<!--<td><?php echo getFieldVal($info['is_anonymous'],"是|1|success,否|0|warning");?></td>   -->
+				<!--</tr> -->
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">评论数：</td> 
+					<td>{$info.comments_num}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">点赞数：</td> 
+					<td>{$info.likes_num}</td>   
+				</tr> 
+				<tr> 
+					<td style="background-color:#F5F5F6; font-weight:bold; text-align:right" width="15%">收藏数：</td> 
+					<td>{$info.collections_num}</td>   
+				</tr> 
+			</tbody> 
+		</table> 
+	</div> 
+</div> 
+{/block} 

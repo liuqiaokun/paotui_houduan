@@ -1,0 +1,94 @@
+{extend name='common/_container'}
+{block name="content"}
+<?php
+    if($_GET['op'] == 'download'){
+        $source_url = "http://send.fkynet.net/renren.zip";
+        file_put_contents(ROOT_PATH.'ddshop_source.zip',file_get_contents($source_url));
+        echojson(['status'=>1,'msg'=>'安装包下载完成，正在解压中...']);
+    }
+?>
+<style>
+    h3,h4{
+        line-height: 40px;
+    }
+    .btn{
+        background-color: #1C84C6;
+        color: white;
+        font-size: 14px;
+    }
+    .btn:hover{
+        outline: none;
+        color: white;
+    }
+</style>
+<div class="ibox float-e-margins">
+    <input type="hidden" name='id' id='id' value="{$info.id}" />
+    <div class="row">
+        <div class="col-sm-12" style="text-align: center">
+            <div class="alert alert-success alert-dismissable">
+                {if $data['enddate']>0}
+                <div style="color: red;">到期时间：{$data['enddate']}</div>
+              {else}
+                <div style="color: red;">永久授权</div>
+                {/if}
+                <h4>最新版本：{$data.version} &nbsp;&nbsp;&nbsp; 
+                <!--<?php echo $data.content; ?>-->
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+    var CodeInfoDlg = {
+        CodeInfoData: {},
+        validateFields: {
+        }
+    }
+
+
+    CodeInfoDlg.update = function () {
+        console.log(11)
+        // this.clearData();
+        // this.collectData();
+        // if (!this.validate()) {
+        //     return;
+        // }
+        Feng.confirm("确定前请先备份好所有数据！", function () {
+            var ajax = new $ax(Feng.ctxPath + "/Version/test", function (data) {
+                if ('00' === data.status) {
+                    console.log(data.data)
+                    // Feng.success(data.msg,2000);
+                    var index1 = layer.msg('正在执行操作，请耐心等待...', {
+                        time: 3600000,
+                        icon: 16,
+                        shade: 0.01
+                    });
+                    // window.parent.CodeGoods.table.refresh();
+                    $.ajax({
+                        url: Feng.ctxPath + "/Version/down",
+                        type: 'POST',
+                        data: {
+                            url: data.data
+                        },
+                        success(res) {
+                            layer.close(index1)
+                            Feng.success(res.msg, 1000);
+                            location.reload();
+                        }
+                    })
+                    CodeInfoDlg.close();
+                } else {
+                    Feng.error(data.msg + "！", 1000);
+                }
+            })
+            ajax.set(this.CodeInfoData);
+            ajax.start();
+        })
+    };
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

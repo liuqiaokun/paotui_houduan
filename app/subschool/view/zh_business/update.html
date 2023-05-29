@@ -1,0 +1,388 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='business_id' id='business_id' value="{$info.business_id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">微信管理员：</label>
+						<div class="col-sm-9">
+						    <?php $wxappId = session('subschool.wxapp_id'); ?>
+							<select lay-ignore name="wxadmin_name" class="form-control chosen" data-placeholder='请选择微信管理员'  id="wxadmin_name">
+								<option value="">请选择</option>
+								{sql connect="mysql" query="select * from gc_wechat_user "}
+								{if $wxappId == $sql.wxapp_id}
+									<option value="{$sql.u_id}" {if condition="$info.wxadmin_name eq $sql.u_id"}selected{/if}>{$sql.nickname}（ID：{$sql.u_id}）</option>
+								{/if}
+								{/sql}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">排序：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="sort" value="{$info.sort}" name="sort" class="form-control" placeholder="请输入排序">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家分类：</label>
+						<div class="col-sm-9">
+						    <?php $wxappId = session('subschool.wxapp_id');$sId = session('subschool.s_id'); ?>
+							<select lay-ignore name="type_id" class="form-control" id="type_id">
+								<option value="">请选择</option>
+								{sql connect="mysql" query="select * from gc_zh_business_type"}
+								{if $sql.s_id == $sId && $sql.wxapp_id == $wxappId}
+									<option value="{$sql.type_id}" {if condition="$info.type_id eq $sql.type_id"}selected{/if}>{$sql.type_name}</option>
+								{/if}
+								{/sql}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家时间段：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="timeslot" value="{$info.timeslot}" name="timeslot" class="form-control" placeholder="请输入商家时间段">
+							<span class="help-block m-b-none">请输入商家时间段。例: 08:00-9:00|9:00-10:00|10:00-12:00（所有符号为英文冒号）</span>
+						</div>
+					</div>
+					<!--<div class="form-group">-->
+						<!--<label class="col-sm-2 control-label">商家打烊时间：</label>-->
+						<!--<div class="col-sm-9">-->
+							<!--<input type="text" autocomplete="off" id="end_time" value="{$info.end_time}" name="end_time" class="form-control" placeholder="请输入商家打烊时间">-->
+							<!--<span class="help-block m-b-none">请输入打烊时间。例：20:30（冒号为英文冒号）</span>-->
+						<!--</div>-->
+					<!--</div>-->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="business_name" value="{$info.business_name}" name="business_name" class="form-control" placeholder="请输入商家名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家地址：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="business_address" value="{$info.business_address}" name="business_address" class="form-control" placeholder="请输入商家地址">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家电话：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="phone" value="{$info.phone}" name="phone" class="form-control" placeholder="请输入商家电话">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">到期时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" value="{if condition="$info.expire_time neq 0"}{$info.expire_time|date='Y-m-d H:i:s'}{/if}" name="expire_time"  placeholder="请输入到期时间" class="form-control" id="expire_time">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家图片：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="business_image" value="{$info.business_image}" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="business_image" class="form-control" placeholder="请输入商家图片">
+							<span class="help-block m-b-none business_image_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="business_image_upload"></span>
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">营业状态：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['status'])){ $info['status'] = '1'; }; ?>
+							<input name="status" value="1" type="radio" {if condition="$info.status eq '1'"}checked{/if} title="营业">
+							<input name="status" value="2" type="radio" {if condition="$info.status eq '2'"}checked{/if} title="打烊">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">商家类型：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['type'])){ $info['type'] = '1'; }; ?>
+							<input name="type" value="1" type="radio" {if condition="$info.type eq '1'"}checked{/if} title="校内">
+							<input name="type" value="2" type="radio" {if condition="$info.type eq '2'"}checked{/if} title="校外">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">首页推荐：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_recommend'])){ $info['is_recommend'] = 1; }; ?>
+							<input name="is_recommend" value="1" type="radio" {if condition="$info.is_recommend eq '1'"}checked{/if} title="开启">
+							<input name="is_recommend" value="0" type="radio" {if condition="$info.is_recommend eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">起步费：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="starting_fee" value="{$info.starting_fee}" name="starting_fee" class="form-control" placeholder="请输入起步费">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">经度：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="longitude" value="{$info.longitude}" name="longitude" class="form-control" placeholder="请输入经度">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">纬度：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="latitude" value="{$info.latitude}" name="latitude" class="form-control" placeholder="请输入纬度">
+							<div>腾讯地图坐标拾取器
+								<a href="https://lbs.qq.com/getPoint/" target="_blank">https://lbs.qq.com/getPoint/</a>
+								。经度范围是0-180°,纬度范围是0-90°
+							</div>
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">选择打印机：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['printtype'])){ $info['printtype'] = 1; }; ?>
+							<input name="printtype" value="1" type="radio" {if condition="$info.printtype eq '1'"}checked{/if} title="飞鹅">
+							<input name="printtype" value="2" type="radio" {if condition="$info.printtype eq '2'"}checked{/if} title="易联云">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">飞鹅打印机编号(SN)：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="printer" value="{$info.printer}" name="printer" class="form-control" placeholder="请输入打印机编号(SN)">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">飞鹅打印机后台注册账号(USER)：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="printer_user" value="{$info.printer_user}" name="printer_user" class="form-control" placeholder="请输入打印机后台注册账号(USER)">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">飞鹅打印机后台账号的UKEY：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="printer_ukey" value="{$info.printer_ukey}" name="printer_ukey" class="form-control" placeholder="请输入打印机后台账号的UKEY">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">易联云打印机应用ID：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="clientid" value="{$info.clientid}" name="clientid" class="form-control" placeholder="易联云打印机应用ID">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">易联云打印机应用秘钥：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="clientsecret" value="{$info.clientsecret}" name="clientsecret" class="form-control" placeholder="易联云打印机应用秘钥">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">易联云终端号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="machine_code" value="{$info.machine_code}" name="machine_code" class="form-control" placeholder="请输入易联云终端号(打印机底座获取)">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">易联云终端秘钥：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="msign" value="{$info.msign}" name="msign" class="form-control" placeholder="请输入易联云终端秘钥(打印机底座获取)">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">虚拟销量：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="virtual_sale" value="{$info.virtual_sale}" name="virtual_sale" class="form-control" placeholder="请输入虚拟销量">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">服务费：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="service_price" value="{$info.service_price}" name="service_price" class="form-control" placeholder="请输入服务费">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">餐盒费：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="box_fee" value="{$info.box_fee}" name="box_fee" class="form-control" placeholder="请输入餐盒费">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">配送费：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="delivery_fee" value="{$info.delivery_fee}" name="delivery_fee" class="form-control" placeholder="请输入配送费">
+						</div>
+					</div>
+					<!--<div class="form-group">-->
+						<!--<label class="col-sm-2 control-label">平台抽成：</label>-->
+						<!--<div class="col-sm-9">-->
+							<!--<input type="text" autocomplete="off" id="store_money" disabled value="{$info.store_money}" name="store_money" class="form-control" placeholder="请输入平台抽成">-->
+						<!--</div>-->
+					<!--</div>-->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">分校抽成：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="fx_store_money" value="{$info.fx_store_money}" name="fx_store_money" class="form-control" placeholder="请输入分校抽成">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商家承担配送费：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="deliveryfee" value="{$info.deliveryfee}" name="deliveryfee" class="form-control" placeholder="请输入商家承担配送费">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">是否是宿舍小店：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['is_dormitory_store'])){ $info['is_dormitory_store'] = 1; }; ?>
+							<input name="is_dormitory_store" value="1" type="radio" {if condition="$info.is_dormitory_store eq '1'"}checked{/if} title="是">
+							<input name="is_dormitory_store" value="0" type="radio" {if condition="$info.is_dormitory_store eq '0'"}checked{/if} title="否">
+						</div>
+					</div>
+
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<link href='__PUBLIC__/static/js/plugins/chosen/chosen.min.css' rel='stylesheet'/>
+<script src='__PUBLIC__/static/js/plugins/chosen/chosen.jquery.js'></script>
+<script>
+layui.use(['form'],function(){});
+uploader('business_image_upload','business_image','image',false,'','{:getUploadServerUrl()}');
+$(function(){$('.chosen').chosen({search_contains: true})})
+laydate.render({elem: '#expire_time',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+		wxadmin_name: {
+			validators: {
+	 		}
+	 	},
+		business_name: {
+			validators: {
+				notEmpty: {
+					message: '商家名称不能为空'
+	 			},
+	 		}
+	 	},
+		business_address: {
+			validators: {
+				notEmpty: {
+					message: '商家地址不能为空'
+	 			},
+	 		}
+	 	},
+		phone: {
+			validators: {
+				regexp: {
+					regexp: /^1[3456789]\d{9}$/,
+					message: '手机号有误'
+	 			},
+	 		}
+	 	},
+        business_image: {
+            validators: {
+                notEmpty: {
+                    message: '商家图片不能为空'
+                },
+            }
+        },
+		status: {
+			validators: {
+				notEmpty: {
+					message: '营业状态不能为空'
+	 			},
+	 		}
+	 	},
+		type: {
+			validators: {
+				notEmpty: {
+					message: '商家类型不能为空'
+	 			},
+	 		}
+	 	},
+        delivery_fee: {
+            validators: {
+                regexp: {
+                    regexp: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+                    message: ''
+                },
+            }
+        },
+        deliveryfee: {
+            validators: {
+                regexp: {
+                    regexp: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+                    message: ''
+                },
+            }
+        },
+        store_money: {
+            validators: {
+                regexp: {
+                    regexp: /^([1-9]\d|\d)$/,
+                    message: '请输入0-100的整数'
+                },
+            }
+        },
+        fx_store_money: {
+            validators: {
+                regexp: {
+                    regexp: /^([1-9]\d|\d)$/,
+                    message: '请输入0-100的整数'
+                },
+            }
+        },
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('business_id').set('wxadmin_name').set('sort').set('type_id').set('timeslot').set('start_time').set('end_time').set('business_name').set('business_address').set('phone').set('expire_time').set('business_image').set('starting_fee').set('longitude').set('latitude').set('printer').set('printer_user').set('printer_ukey').set('virtual_sale').set('service_price').set('box_fee').set('deliveryfee').set('delivery_fee').set('store_money').set('fx_store_money').set('clientid').set('clientsecret').set('machine_code').set('msign');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var status = $("input[name = 'status']:checked").val();
+	 var type = $("input[name = 'type']:checked").val();
+	 var is_recommend = $("input[name = 'is_recommend']:checked").val();
+     var is_dormitory_store = $("input[name = 'is_dormitory_store']:checked").val();
+     var printtype = $("input[name = 'printtype']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/ZhBusiness/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('status',status);
+	 ajax.set('type',type);
+	 ajax.set('is_recommend',is_recommend);
+     ajax.set('is_dormitory_store',is_dormitory_store);
+     ajax.set('printtype',printtype);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

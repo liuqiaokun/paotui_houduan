@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <script src="__PUBLIC__/static/js/jquery.min.js?v=2.1.4" type="text/javascript"></script>
+    <title>公众号授权登录</title>
+    <style>
+        .text-bold{
+            font-weight: bold;
+            color: black !important;
+            font-size: 20px !important;
+        }
+        .notice{
+            margin-top: 10px;
+            text-align: center;
+            color: #999999;
+            font-size: 16px;
+        }
+        .login{
+            background: linear-gradient(90deg, #FF484A 0%, #FF716C 100%);
+            /*background-color: #07C160;*/
+            width: 70%;
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            font-size: 16px;
+            margin: 50px auto;
+            border-radius: 40px;
+            color: white;
+        }
+        img{
+            width: 200px;
+            height: 200px;
+            margin: 100px auto 80px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <img src="{$mp_code}">
+    <div class="notice text-bold">请先长按二维码关注公众号</div>
+    <div class="notice">小程序公众号消息推送点击授权</div>
+    <div class="login" id="text">{$text}</div>
+    <input type="hidden" id="wxapp_id" value="{$wxapp_id}" />
+    <input type="hidden" id="appid" value="{$appid}" />
+    <input type="hidden" id="url" value="<?php echo $_SERVER['HTTP_HOST'] ?>" />
+
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+    <script>
+        $(".login").click(function () {
+            appId = $("#appid").val()
+            redirect_uri = 'https://'+$('#url').val()+'/api/Mplogin/index?wxapp_id='+$("#wxapp_id").val(),
+            href= 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appId +
+                '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=h5'
+            if($("#text").html()=='点击授权')
+            {
+                window.location.href =href
+            }
+            else{
+                wx.miniProgram.navigateBack({
+                    delta: 1
+                });
+            }
+        })
+
+    </script>
+</body>
+</html>

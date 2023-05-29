@@ -1,0 +1,191 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row" style="margin-top:-20px;">
+				<div class="layui-tab layui-tab-brief" lay-filter="test">
+					<ul class="layui-tab-title">
+						<li class="layui-this">类型选择</li>
+						<li>阿里云配置</li>
+						<li>七牛云配置</li>
+						<li>腾讯云配置</li>
+					</ul>
+					<div class="layui-tab-content" style="margin-top:10px;">
+						<div class="layui-tab-item layui-show">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">是否开启远程附件：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['oss_status'])){ $info['oss_status'] = 1; }; ?>
+							<input name="oss_status" value="1" type="radio" {if condition="$info.oss_status eq '1'"}checked{/if} title="开启">
+							<input name="oss_status" value="0" type="radio" {if condition="$info.oss_status eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">类型：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['oss_default_type'])){ $info['oss_default_type'] = 'ali'; }; ?>
+							<input name="oss_default_type" value="ali" type="radio" {if condition="$info.oss_default_type eq 'ali'"}checked{/if} title="阿里">
+							<input name="oss_default_type" value="qiniuyun" type="radio" {if condition="$info.oss_default_type eq 'qiniuyun'"}checked{/if} title="七牛">
+							<input name="oss_default_type" value="tencent" type="radio" {if condition="$info.oss_default_type eq 'tencent'"}checked{/if} title="腾讯云">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Access Key ID：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ali_oss_accesskeyid" value="" name="ali_oss_accesskeyid" class="form-control" placeholder="请输入Access Key ID">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Access Key Secret：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ali_oss_accesskeysecret" value="" name="ali_oss_accesskeysecret" class="form-control" placeholder="请输入Access Key Secret">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">url：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ali_oss_endpoint" value="" name="ali_oss_endpoint" class="form-control" placeholder="请输入url">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">bucket：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ali_oss_bucket" value="" name="ali_oss_bucket" class="form-control" placeholder="请输入bucket">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Accesskey：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="qny_oss_accesskey" value="" name="qny_oss_accesskey" class="form-control" placeholder="请输入Accesskey">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Secretkey：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="qny_oss_secretkey" value="" name="qny_oss_secretkey" class="form-control" placeholder="请输入Secretkey">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">bucket：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="qny_oss_bucket" value="" name="qny_oss_bucket" class="form-control" placeholder="请输入bucket">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">url：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="qny_oss_domain" value="" name="qny_oss_domain" class="form-control" placeholder="请输入url">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">腾讯云keyId：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="tencent_oss_secretid" value="" name="tencent_oss_secretid" class="form-control" placeholder="请输入腾讯云keyId">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">腾讯云keysecret：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="tencent_oss_secretkey" value="" name="tencent_oss_secretkey" class="form-control" placeholder="请输入腾讯云keysecret">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">bucket（存储桶名称）：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="tencent_oss_bucket" value="" name="tencent_oss_bucket" class="form-control" placeholder="请输入bucket（存储桶名称）">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">所属区域：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="tencent_oss_region" value="" name="tencent_oss_region" class="form-control" placeholder="请输入所属区域">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.add()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+layui.use('element', function(){
+	var element = layui.element;
+	element.on('tab(test)', function(elem){
+	});
+});
+laydate.render({elem: '#create_time',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('u_id').set('wxapp_id').set('ali_oss_accesskeyid').set('ali_oss_accesskeysecret').set('ali_oss_endpoint').set('ali_oss_bucket').set('qny_oss_accesskey').set('qny_oss_secretkey').set('qny_oss_bucket').set('qny_oss_domain').set('create_time').set('tencent_oss_secretid').set('tencent_oss_secretkey').set('tencent_oss_bucket').set('tencent_oss_region');
+};
+
+CodeInfoDlg.add = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var oss_status = $("input[name = 'oss_status']:checked").val();
+	 var oss_default_type = $("input[name = 'oss_default_type']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/UploadOss/add", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('oss_status',oss_status);
+	 ajax.set('oss_default_type',oss_default_type);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

@@ -1,0 +1,153 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='id' id='id' value="{$info.id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row" style="margin-top:-20px;">
+				<div class="layui-tab layui-tab-brief" lay-filter="test">
+					<ul class="layui-tab-title">
+						<li class="layui-this">基本配置</li>
+						<li>阿里云配置</li>
+						<li>创蓝配置</li>
+					</ul>
+					<div class="layui-tab-content" style="margin-top:10px;">
+						<div class="layui-tab-item layui-show">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">是否使用短信通知：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['sms_status'])){ $info['sms_status'] = 1; }; ?>
+							<input name="sms_status" value="1" type="radio" {if condition="$info.sms_status eq '1'"}checked{/if} title="开启">
+							<input name="sms_status" value="0" type="radio" {if condition="$info.sms_status eq '0'"}checked{/if} title="关闭">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">平台类型：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['sms_type'])){ $info['sms_type'] = 'ali'; }; ?>
+							<input name="sms_type" value="ali" type="radio" {if condition="$info.sms_type eq 'ali'"}checked{/if} title="阿里云">
+							<input name="sms_type" value="cl" type="radio" {if condition="$info.sms_type eq 'cl'"}checked{/if} title="创蓝">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">阿里云AccessKeyId：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ali_sms_accesskeyid" value="{$info.ali_sms_accesskeyid}" name="ali_sms_accesskeyid" class="form-control" placeholder="请输入阿里云AccessKeyId">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">阿里云AccessKeySecret：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ali_sms_accesskeysecret" value="{$info.ali_sms_accesskeysecret}" name="ali_sms_accesskeysecret" class="form-control" placeholder="请输入阿里云AccessKeySecret">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">阿里云签名名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ali_sms_signname" value="{$info.ali_sms_signname}" name="ali_sms_signname" class="form-control" placeholder="请输入阿里云签名名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">阿里云模板CODE：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="ali_sms_tempcode" value="{$info.ali_sms_tempcode}" name="ali_sms_tempcode" class="form-control" placeholder="请输入阿里云模板CODE">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="col-sm-12">
+							<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">创蓝账号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="cl_account" value="{$info.cl_account}" name="cl_account" class="form-control" placeholder="请输入创蓝账号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">创蓝密码：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="cl_pwd" value="{$info.cl_pwd}" name="cl_pwd" class="form-control" placeholder="请输入创蓝密码">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">创蓝签名名称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="cl_sign" value="{$info.cl_sign}" name="cl_sign" class="form-control" placeholder="请输入创蓝签名名称">
+						</div>
+					</div>
+							<!-- form end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+layui.use('element', function(){
+	var element = layui.element;
+	element.on('tab(test)', function(elem){
+	});
+});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('id').set('wxapp_id').set('ali_sms_accesskeyid').set('ali_sms_accesskeysecret').set('ali_sms_signname').set('ali_sms_tempcode').set('cl_account').set('cl_pwd').set('cl_sign');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var sms_status = $("input[name = 'sms_status']:checked").val();
+	 var sms_type = $("input[name = 'sms_type']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/Sms/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('sms_status',sms_status);
+	 ajax.set('sms_type',sms_type);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

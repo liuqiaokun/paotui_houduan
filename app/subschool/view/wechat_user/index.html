@@ -1,0 +1,129 @@
+{extend name='common/_container'} {block name="content"}
+<div class="row">
+	<div class="col-sm-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content"> 
+				<div class="row row-lg"> 
+					<div class="col-sm-12"> 
+						<div class="row" id="searchGroup">
+							<div class="col-sm-2">
+								<div class="input-group">
+									<div class="input-group-btn">
+										<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">昵称</button>
+									</div>
+									<input type="text" autocomplete="off" class="form-control" id="nickname" placeholder="昵称" />
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="input-group">
+									<div class="input-group-btn">
+										<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">姓名</button>
+									</div>
+									<input type="text" autocomplete="off" class="form-control" id="t_name" placeholder="姓名" />
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="input-group">
+									<div class="input-group-btn">
+										<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">手机号</button>
+									</div>
+									<input type="text" autocomplete="off" class="form-control" id="phone" placeholder="手机号" />
+								</div>
+							</div>
+							<!-- search end -->
+							<div class="col-sm-1">
+								<button type="button" class="btn btn-success " onclick="CodeGoods.search()" id="">
+									<i class="fa fa-search"></i>&nbsp;搜索
+								</button>
+							</div>
+						</div>
+						<div class="btn-group-sm" id="CodeGoodsTableToolbar" role="group">
+						</div>
+						<table id="CodeGoodsTable" data-mobile-responsive="true" data-click-to-select="true">
+							<thead><tr><th data-field="selectItem" data-checkbox="true"></th></tr></thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	var CodeGoods = {id: "CodeGoodsTable",seItem: null,table: null,layerIndex: -1};
+
+	CodeGoods.initColumn = function () {
+ 		return [
+ 			{field: 'selectItem', checkbox: true},
+ 			{title: '编号', field: 'u_id', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '昵称', field: 'nickname', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '头像', field: 'avatar', visible: true, align: 'center', valign: 'middle',sortable: true,formatter:CodeGoods.avatarFormatter},
+ 			{title: '余额', field: 'balance', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '性别', field: 't_sex', visible: true, align: 'center', valign: 'middle',sortable: true,formatter:CodeGoods.t_sexFormatter},
+ 			{title: '姓名', field: 't_name', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '手机号', field: 'phone', visible: true, align: 'center', valign: 'middle',sortable: true},
+ 			{title: '创建时间', field: 'create_time', visible: true, align: 'center', valign: 'middle',sortable: true,formatter:CodeGoods.create_timeFormatter},
+ 		];
+ 	};
+
+	CodeGoods.avatarFormatter = function(value,row,index) {
+		if(value){
+			return "<a href=\"javascript:void(0)\" onclick=\"openImg('"+value+"')\"><img height='30' src="+value+"></a>";	
+		}
+	}
+
+	CodeGoods.t_sexFormatter = function(value,row,index) {
+		if(value !== null){
+			var value = value.toString();
+			switch(value){
+				case '2':
+					return '<span class="label label-success">女</span>';
+				break;
+				case '1':
+					return '<span class="label label-danger">男</span>';
+				break;
+			}
+		}
+	}
+
+	CodeGoods.create_timeFormatter = function(value,row,index) {
+		if(value){
+			return formatDateTime(value,'Y-m-d H:i:s');	
+		}
+	}
+
+	CodeGoods.formParams = function() {
+		var queryData = {};
+		queryData['offset'] = 0;
+		queryData['wxapp_id'] = $("#wxapp_id").val();
+		queryData['nickname'] = $("#nickname").val();
+		queryData['s_id'] = $("#s_id").val();
+		queryData['t_name'] = $("#t_name").val();
+		queryData['phone'] = $("#phone").val();
+		return queryData;
+	}
+
+	CodeGoods.check = function () {
+		var selected = $('#' + this.id).bootstrapTable('getSelections');
+		if(selected.length == 0){
+			Feng.info("请先选中表格中的某一记录！");
+			return false;
+		}else{
+			CodeGoods.seItem = selected;
+			return true;
+		}
+	};
+
+	CodeGoods.search = function() {
+		CodeGoods.table.refresh({query : CodeGoods.formParams()});
+	};
+
+	$(function() {
+		var defaultColunms = CodeGoods.initColumn();
+		var url = location.search;
+		var table = new BSTable(CodeGoods.id, Feng.ctxPath+"/WechatUser/index"+url,defaultColunms,20);
+		table.setPaginationType("server");
+		table.setQueryParams(CodeGoods.formParams());
+		CodeGoods.table = table.init();
+	});
+</script>
+{/block}

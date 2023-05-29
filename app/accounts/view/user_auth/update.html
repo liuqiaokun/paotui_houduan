@@ -1,0 +1,86 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+<input type="hidden" name='u_id' id='u_id' value="{$info.u_id}" />
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">骑手审核状态：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['run_status'])){ $info['run_status'] = '0'; }; ?>
+							<input name="run_status" value="0" type="radio" {if condition="$info.run_status eq '0'"}checked{/if} title="未申请审核">
+							<input name="run_status" value="1" type="radio" {if condition="$info.run_status eq '1'"}checked{/if} title="审核中">
+							<input name="run_status" value="2" type="radio" {if condition="$info.run_status eq '2'"}checked{/if} title="审核通过">
+							<input name="run_status" value="-1" type="radio" {if condition="$info.run_status eq '-1'"}checked{/if} title="审核拒绝">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">认证学校id：</label>
+						<div class="col-sm-9">
+							<select lay-ignore name="auth_sid" class="form-control" id="auth_sid">
+								<option value="">请选择</option>
+								{sql connect="mysql" query="select s_id,s_name from gc_school"}
+									<option value="{$sql.s_id}" {if condition="$info.auth_sid eq $sql.s_id"}selected{/if}>{$sql.s_name}</option>
+								{/sql}
+							</select>
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.update()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('u_id').set('auth_sid');
+};
+
+CodeInfoDlg.update = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var run_status = $("input[name = 'run_status']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/UserAuth/update", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('run_status',run_status);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

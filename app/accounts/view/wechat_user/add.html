@@ -1,0 +1,164 @@
+{extend name='common/_container'}
+{block name="content"}
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<div class="form-horizontal" id="CodeInfoForm">
+			<div class="row">
+				<div class="col-sm-12">
+				<!-- form start -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">openid：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="openid" value="" name="openid" class="form-control" placeholder="请输入openid">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">昵称：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="nickname" value="" name="nickname" class="form-control" placeholder="请输入昵称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">头像：</label>
+						<div class="col-sm-6">
+							<input type="text" autocomplete="off" id="avatar" value="" {if condition="config('my.img_show_status') eq true"}onmousemove="showBigPic(this.value)" onmouseout="closeimg()"{/if} name="avatar" class="form-control" placeholder="请输入头像">
+							<span class="help-block m-b-none avatar_process"></span>
+						</div>
+						<div class="col-sm-2" style="position:relative; right:30px;">
+							<span id="avatar_upload"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">余额：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="balance" value="" name="balance" class="form-control" placeholder="请输入余额">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">所属学校：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['s_id'])){ $info['s_id'] = ''; }; ?>
+							<select lay-ignore name="s_id" class="form-control" id="s_id">
+								<option value="">请选择</option>
+								{sql connect="mysql" query="select s_id,s_name from gc_school"}
+									<option value="{$sql.s_id}" {if condition="$info.s_id eq $sql.s_id"}selected{/if}>{$sql.s_name}</option>
+								{/sql}
+							</select>
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">骑手审核状态：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['run_status'])){ $info['run_status'] = '0'; }; ?>
+							<input name="run_status" value="0" type="radio" {if condition="$info.run_status eq '0'"}checked{/if} title="未申请审核">
+							<input name="run_status" value="1" type="radio" {if condition="$info.run_status eq '1'"}checked{/if} title="审核中">
+							<input name="run_status" value="2" type="radio" {if condition="$info.run_status eq '2'"}checked{/if} title="审核通过">
+							<input name="run_status" value="-1" type="radio" {if condition="$info.run_status eq '-1'"}checked{/if} title="审核拒绝">
+						</div>
+					</div>
+					<div class="form-group layui-form">
+						<label class="col-sm-2 control-label">性别：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['t_sex'])){ $info['t_sex'] = '1'; }; ?>
+							<input name="t_sex" value="1" type="radio" {if condition="$info.t_sex eq '1'"}checked{/if} title="女">
+							<input name="t_sex" value="0" type="radio" {if condition="$info.t_sex eq '0'"}checked{/if} title="男">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">认证学校id：</label>
+						<div class="col-sm-9">
+							<?php if(!isset($info['auth_sid'])){ $info['auth_sid'] = ''; }; ?>
+							<select lay-ignore name="auth_sid" class="form-control" id="auth_sid">
+								<option value="">请选择</option>
+								{sql connect="mysql" query="select s_id,s_name from gc_school"}
+									<option value="{$sql.s_id}" {if condition="$info.auth_sid eq $sql.s_id"}selected{/if}>{$sql.s_name}</option>
+								{/sql}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">到期时间：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="deadtime" value="" name="deadtime" class="form-control" placeholder="请输入到期时间">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">姓名：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="t_name" value="" name="t_name" class="form-control" placeholder="请输入姓名">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">手机号：</label>
+						<div class="col-sm-9">
+							<input type="text" autocomplete="off" id="phone" value="" name="phone" class="form-control" placeholder="请输入手机号">
+						</div>
+					</div>
+				<!-- form end -->
+				</div>
+			</div>
+			<div class="hr-line-dashed"></div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-9 col-sm-offset-1">
+					<button type="button" class="btn btn-primary" onclick="CodeInfoDlg.add()" id="ensure">
+						<i class="fa fa-check"></i>&nbsp;确认提交
+					</button>
+					<button type="button" class="btn btn-danger" onclick="CodeInfoDlg.close()" id="cancel">
+						<i class="fa fa-eraser"></i>&nbsp;取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/static/js/upload.js" charset="utf-8"></script>
+<script src="__PUBLIC__/static/js/plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form'],function(){});
+uploader('avatar_upload','avatar','image',false,'','{:getUploadServerUrl()}');
+laydate.render({elem: '#create_time',type: 'datetime',trigger:'click'});
+var CodeInfoDlg = {
+	CodeInfoData: {},
+	validateFields: {
+		phone: {
+			validators: {
+				regexp: {
+					regexp: /^1[3456789]\d{9}$/,
+					message: ''
+	 			},
+	 		}
+	 	},
+	 }
+}
+
+CodeInfoDlg.collectData = function () {
+	this.set('u_id').set('wxapp_id').set('openid').set('nickname').set('avatar').set('balance').set('s_id').set('auth_sid').set('deadtime').set('t_name').set('phone').set('create_time');
+};
+
+CodeInfoDlg.add = function () {
+	 this.clearData();
+	 this.collectData();
+	 if (!this.validate()) {
+	 	return;
+	 }
+	 var run_status = $("input[name = 'run_status']:checked").val();
+	 var t_sex = $("input[name = 't_sex']:checked").val();
+	 var ajax = new $ax(Feng.ctxPath + "/WechatUser/add", function (data) {
+	 	if ('00' === data.status) {
+	 		Feng.success(data.msg,1000);
+	 		window.parent.CodeGoods.table.refresh();
+	 		CodeInfoDlg.close();
+	 	} else {
+	 		Feng.error(data.msg + "！",1000);
+		 }
+	 })
+	 ajax.set('run_status',run_status);
+	 ajax.set('t_sex',t_sex);
+	 ajax.set(this.CodeInfoData);
+	 ajax.start();
+};
+
+
+</script>
+<script src="__PUBLIC__/static/js/base.js" charset="utf-8"></script>
+{/block}

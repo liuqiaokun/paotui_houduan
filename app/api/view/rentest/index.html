@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <script src="__PUBLIC__/static/js/jquery.min.js?v=2.1.4" type="text/javascript"></script>
+    <title>公众号授权登录</title>
+    <style>
+        .notice{
+            margin-top: 300px;
+            text-align: center;
+        }
+        .login{
+            background-color: #07C160;
+            width: 60%;
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            font-size: 16px;
+            margin: 50px auto;
+            border-radius: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="notice">请确保小程序和公众号在同一微信开放平台账号下</div>
+    <input type="hidden" id="wxapp_id" value="{$wxapp_id}" />
+    <input type="hidden" id="appid" value="{$appid}" />
+    <div class="login" id="text">{$text}</div>
+    <script>
+        $(".login").click(function () {
+            appId = $("#appid").val()
+            redirect_uri = 'https://test.fkynet.net/api/Rentest/index?wxapp_id='+$("#wxapp_id").val(),
+            href= 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appId +
+                '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=h5'
+            if($("#text").html()=='点击授权')
+            {
+                window.location.href =href
+            }
+        })
+
+    </script>
+</body>
+</html>
